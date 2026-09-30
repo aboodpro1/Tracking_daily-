@@ -10,10 +10,10 @@
  * Auth:     Public or Local Webhook
  */
 
-const UrlGetTest = "http://localhost:5678/webhook-test/Get";
-const UrlGet = "http://localhost:5678/webhook/Get-database";
-const UrlPostTest = "http://localhost:5678/webhook-test/post-database";
-const UrlPost = "http://localhost:5678/webhook/post-database";
+const UrlGetTest = "https://n8n-production-4941.up.railway.app/webhook-test/Get-database";
+const UrlGet = "https://n8n-production-4941.up.railway.app/webhook/Get-database";
+const UrlPostTest = "";
+const UrlPost = "";
 
 /**
  * Formats today's date in YYYY-MM-DD format for comparisons and API parameters.
