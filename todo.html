@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قائمة المهام | لوحة المتابعة</title>
+    <!-- Google Fonts: Tajawal for Arabic typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./source/API/Board_function.js" defer></script>
+</head>
+
+<body>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <div class="app-container">
+        <!-- App Navigation Header (Mobile-App style top navigation) -->
+        <header class="app-navbar" aria-label="شريط التنقل الرئيسي">
+            <div class="navbar-wrapper">
+                <!-- App Brand Logo -->
+                <a href="index.html" class="app-logo">
+                    <span class="logo-gem" aria-hidden="true"></span>
+                    <div class="logo-title-group">
+                        <span class="logo-text">إنجاز</span>
+                        <span class="logo-subtext" aria-hidden="true">لوحة المتابعة اليومية</span>
+                    </div>
+                </a>
+
+                <!-- Segmented App Navigation -->
+                <nav class="navbar-nav" aria-label="التنقل بين الأقسام">
+                    <ul class="nav-segment-list">
+                        <li class="nav-segment-item">
+                            <a href="index.html" class="nav-segment-link">
+                                <span class="nav-icon" aria-hidden="true">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 5v14M5 12h14"></path>
+                                    </svg>
+                                </span>
+                                <span class="nav-label">المهام</span>
+                                <span class="nav-badge" aria-hidden="true">جديد</span>
+                            </a>
+                        </li>
+                        <li class="nav-segment-item active">
+                            <a href="todo.html" class="nav-segment-link" aria-current="page">
+                                <span class="nav-icon" aria-hidden="true">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="14" width="7" height="7"></rect>
+                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                    </svg>
+                                </span>
+                                <span class="nav-label">قائمة المهام</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content main-board-view">
+            <div class="board-wrapper">
+                <!-- Page Header -->
+                <header class="page-header board-header">
+                    <div class="header-main-info">
+                        <h1 class="page-title">قائمة المهام</h1>
+                        <p class="page-subtitle">تتبع سير مهامك اليومية وتنظيم أولوياتك عبر حالات الإنجاز الثلاث بالسحب والإفلات.</p>
+                    </div>
+
+                    <!-- Modern Toolbar Area: Date Badge and Action Controls -->
+                    <div class="board-header-toolbar">
+                        <div class="header-badge board-date-badge">
+                            <span class="badge-dot dot-live" aria-hidden="true"></span>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="badge-calendar-icon" aria-hidden="true">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <span id="today-date-badge">لوحة المتابعة اليومية</span>
+                        </div>
+
+                        <div class="header-actions">
+                            <a href="index.html" class="btn-secondary-action" title="إضافة مهمة جديدة">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                <span>مهمة جديدة</span>
+                            </a>
+                            <button onclick="GetTasks()" class="btn-new-task" id="btn-fetch-tasks" title="تحديث وجلب المهام من قاعدة البيانات">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                                </svg>
+                                <span>تحديث وجلب المهام</span>
+                            </button>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Statistics & Tracking Section -->
+                <section class="stats-section" aria-label="إحصائيات المهام">
+                    <div class="stats-grid">
+                        <!-- إجمالي المهام -->
+                        <div class="stat-card">
+                            <div class="stat-icon-wrapper stat-icon-total" aria-hidden="true">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">إجمالي المهام</span>
+                                <span class="stat-value" id="stat-total">0</span>
+                            </div>
+                        </div>
+
+                        <!-- قيد الانتظار -->
+                        <div class="stat-card">
+                            <div class="stat-icon-wrapper stat-icon-pending" aria-hidden="true">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">قيد الانتظار</span>
+                                <span class="stat-value" id="stat-pending">0</span>
+                            </div>
+                        </div>
+
+                        <!-- قيد التنفيذ -->
+                        <div class="stat-card">
+                            <div class="stat-icon-wrapper stat-icon-progress" aria-hidden="true">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M12 2a10 10 0 0 1 10 10"></path>
+                                </svg>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">قيد التنفيذ</span>
+                                <span class="stat-value" id="stat-progress">0</span>
+                            </div>
+                        </div>
+
+                        <!-- مكتملة -->
+                        <div class="stat-card stat-card-highlight">
+                            <div class="stat-icon-wrapper stat-icon-completed" aria-hidden="true">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">مكتملة</span>
+                                <span class="stat-value" id="stat-completed">0</span>
+                            </div>
+                            <div class="stat-progress-pill" id="stat-progress-pill" aria-label="نسبة الإنجاز">
+                                <span>0% إنجاز</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Task Management Visual Board -->
+                <section class="task-board-section" aria-label="لوحة حالات المهام">
+                    <div class="task-board-grid">
+                        <!-- Column 1: قيد الانتظار -->
+                        <div class="board-column board-col-pending" id="col-pending">
+                            <div class="column-header">
+                                <div class="column-title-box">
+                                    <span class="column-dot dot-pending" aria-hidden="true"></span>
+                                    <h2 class="column-title">قيد الانتظار</h2>
+                                </div>
+                                <span class="column-counter" id="counter-pending">0</span>
+                            </div>
+
+                            <div class="column-cards-list" id="cards-pending" data-status="قيد الانتظار">
+                                <!-- Cards will be loaded and dropped dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Column 2: قيد التنفيذ -->
+                        <div class="board-column board-col-progress" id="col-progress">
+                            <div class="column-header">
+                                <div class="column-title-box">
+                                    <span class="column-dot dot-progress" aria-hidden="true"></span>
+                                    <h2 class="column-title">قيد التنفيذ</h2>
+                                </div>
+                                <span class="column-counter" id="counter-progress">0</span>
+                            </div>
+
+                            <div class="column-cards-list" id="cards-progress" data-status="قيد التنفيذ">
+                                <!-- Cards will be loaded and dropped dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Column 3: مكتملة -->
+                        <div class="board-column board-col-completed" id="col-completed">
+                            <div class="column-header">
+                                <div class="column-title-box">
+                                    <span class="column-dot dot-completed" aria-hidden="true"></span>
+                                    <h2 class="column-title">مكتملة</h2>
+                                </div>
+                                <span class="column-counter" id="counter-completed">0</span>
+                            </div>
+
+                            <div class="column-cards-list" id="cards-completed" data-status="مكتملة">
+                                <!-- Cards will be loaded and dropped dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
