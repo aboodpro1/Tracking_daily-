@@ -1,7 +1,7 @@
 
 
-let UrlPostTest = "http://localhost:5678/webhook-test/post-database"
-let UrlPost = "http://localhost:5678/webhook/post-database"
+let UrlPostTest = "https://n8n-production-4941.up.railway.app/webhook-test/post-database"
+let UrlPost = "https://n8n-production-4941.up.railway.app/webhook/post-database"
 
 
 /**
