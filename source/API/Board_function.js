@@ -10,7 +10,7 @@
  * Auth:     Public or Local Webhook
  */
 
-const UrlGetTest = "http://localhost:5678/webhook-test/Get-database";
+const UrlGetTest = "http://localhost:5678/webhook-test/Get";
 const UrlGet = "http://localhost:5678/webhook/Get-database";
 const UrlPostTest = "http://localhost:5678/webhook-test/post-database";
 const UrlPost = "http://localhost:5678/webhook/post-database";
@@ -808,7 +808,7 @@ function GetTasks() {
     }
 
     axios
-        .get(UrlGet, {
+        .get(UrlGetTest, {
             params: {
                 Get: "get_all_tasks",
                 date: todayFormattedDate,
