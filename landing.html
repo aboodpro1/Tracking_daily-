@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنجاز | لوحة المتابعة اليومية وإدارة المهام الذكية</title>
+    <meta name="description"
+        content="إنجاز - نظامك المتكامل لتنظيم وإدارة المهام اليومية بلوحة كانبان عربية مبتكرة، وضوح تام للأولويات ومتابعة لحظية للإنجاز.">
+
+    <!-- Google Fonts: Tajawal for Arabic typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="./source/Actions_js/page_transitions.js" defer></script>
+</head>
+
+<body class="landing-page-body">
+
+    <!-- Top Glow Orb Decorators -->
+    <div class="landing-ambient-glow glow-top-right" aria-hidden="true"></div>
+    <div class="landing-ambient-glow glow-top-left" aria-hidden="true"></div>
+
+    <!-- ==========================================================================
+       01 — HEADER (Minimal Premium Navigation)
+       ========================================================================== -->
+    <header class="landing-header" id="header" aria-label="شريط التنقل الرئيسي">
+        <div class="landing-header-inner">
+            <!-- App Logo -->
+            <a href="landing.html" class="app-logo" aria-label="إنجاز - الصفحة الرئيسية">
+                <span class="logo-gem" aria-hidden="true"></span>
+                <div class="logo-title-group">
+                    <span class="logo-text">إنجاز</span>
+                    <span class="logo-subtext" aria-hidden="true">لوحة المتابعة اليومية</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="landing-nav" aria-label="أقسام الصفحة">
+                <ul class="landing-nav-list">
+                    <li><a href="#how-it-works" class="landing-nav-link">كيف يعمل</a></li>
+                    <li><a href="#features" class="landing-nav-link">المميزات</a></li>
+                    <li><a href="#kanban-preview" class="landing-nav-link">لوحة كانبان</a></li>
+                    <li><a href="#progress" class="landing-nav-link">متابعة الإنجاز</a></li>
+                </ul>
+            </nav>
+
+            <!-- Header Action CTA -->
+            <div class="landing-header-actions">
+                <a href="auth.html" class="btn-landing-secondary">تسجيل الدخول</a>
+                <a href="auth.html" class="btn-landing-primary">
+                    <span>ابدأ الآن مجاناً</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- ==========================================================================
+           02 — HERO SECTION
+           ========================================================================== -->
+        <section class="landing-hero" id="hero" aria-labelledby="hero-title">
+            <div class="landing-container">
+                <div class="hero-grid">
+                    <!-- Right Column: Copy & CTAs -->
+                    <div class="hero-content">
+                        <div class="hero-badge">
+                            <span class="badge-dot" aria-hidden="true"></span>
+                            <span class="badge-text">نظام إدارة المهام اليومي بالعربية</span>
+                        </div>
+                        <h1 id="hero-title" class="hero-title">
+                            رتّب يومك بوضوح تام،<br>
+                            <span class="hero-title-gradient">وحوّل أهدافك إلى إنجازات.</span>
+                        </h1>
+                        <p class="hero-description">
+                            إنجاز هو مساحتك الإنتاجية المصممة لتبسيط يومك. نظّم مهامك عبر لوحة كانبان تفاعلية سلسة، حدد
+                            أولوياتك بدقة، وتابع تقدمك لحظة بلحظة دون أي تعقيد.
+                        </p>
+                        <div class="hero-cta-group">
+                            <a href="auth.html" class="btn-hero-primary" id="hero-primary-cta">
+                                <span>ابدأ بتنظيم يومك</span>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                                    aria-hidden="true">
+                                    <polyline points="15 18 9 12 15 6"></polyline>
+                                </svg>
+                            </a>
+                            <a href="#kanban-preview" class="btn-hero-secondary">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                <span>جرب اللوحة التفاعلية</span>
+                            </a>
+                        </div>
+                        <div class="hero-trust-indicators">
+                            <div class="trust-pill">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                    stroke="var(--color-gold-base)" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" aria-hidden="true">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>واجهة عربية أصيلة 100%</span>
+                            </div>
+                            <div class="trust-pill">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                    stroke="var(--color-blue-primary)" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                                <span>سحب وإفلات بديهي وسريع</span>
+                            </div>
+                            <div class="trust-pill">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 14 14"></polyline>
+                                </svg>
+                                <span>متابعة حية لمهام اليوم</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Left Column: Authentic Interactive Kanban Product Mockup -->
+                    <div class="hero-visual">
+                        <div class="product-showcase-frame">
+                            <div class="showcase-window-header">
+                                <div class="window-controls">
+                                    <span class="control-dot dot-close"></span>
+                                    <span class="control-dot dot-min"></span>
+                                    <span class="control-dot dot-expand"></span>
+                                </div>
+                                <div class="window-address-bar">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        aria-hidden="true">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                    <span>app.enjaz.com/todo</span>
+                                </div>
+                                <div class="window-date-badge" id="hero-mock-date">اليوم: متابعة مباشرة</div>
+                            </div>
+
+                            <div class="showcase-window-body">
+                                <!-- Board Stats Bar -->
+                                <div class="mini-board-stats">
+                                    <div class="mini-stat-item">
+                                        <span class="mini-stat-label">مهام اليوم:</span>
+                                        <span class="mini-stat-val" id="hero-total-tasks">4</span>
+                                    </div>
+                                    <div class="mini-stat-item">
+                                        <span class="mini-stat-label">المكتملة:</span>
+                                        <span class="mini-stat-val text-success" id="hero-completed-tasks">2</span>
+                                    </div>
+                                    <div class="mini-stat-progress">
+                                        <div class="mini-progress-bar">
+                                            <div class="mini-progress-fill" id="hero-progress-fill" style="width: 50%;">
+                                            </div>
+                                        </div>
+                                        <span class="mini-progress-text" id="hero-progress-percent">50%</span>
+                                    </div>
+                                </div>
+
+                                <!-- Mini 3-Column Kanban Board -->
+                                <div class="hero-kanban-columns">
+                                    <!-- Column 1: Pending -->
+                                    <div class="mini-kanban-col" data-col="pending">
+                                        <div class="mini-col-header header-pending">
+                                            <div class="mini-col-title-wrap">
+                                                <span class="col-indicator indicator-pending"></span>
+                                                <span class="mini-col-name">قيد الانتظار</span>
+                                            </div>
+                                            <span class="mini-col-counter" id="hero-cnt-pending">1</span>
+                                        </div>
+                                        <div class="mini-col-cards" id="hero-list-pending">
+                                            <div class="mini-task-card" draggable="true" data-id="h1"
+                                                data-cat="religious" data-prio="important">
+                                                <div class="mini-card-tags">
+                                                    <span class="category-pill pill-religious">دينية</span>
+                                                    <span class="priority-pill pill-important">مهمة</span>
+                                                </div>
+                                                <h4 class="mini-card-title">قراءة الورد اليومي والأذكار</h4>
+                                                <div class="mini-card-meta">
+                                                    <span class="meta-time">
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2">
+                                                            <circle cx="12" cy="12" r="10"></circle>
+                                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                                        </svg>
+                                                        أقل من ساعة
+                                                    </span>
+                                                    <button type="button" class="mini-card-move-btn"
+                                                        onclick="moveHeroCard('h1', 'progress')"
+                                                        title="نقل إلى قيد التنفيذ">
+                                                        نقل للبدء ←
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Column 2: In Progress -->
+                                    <div class="mini-kanban-col" data-col="progress">
+                                        <div class="mini-col-header header-progress">
+                                            <div class="mini-col-title-wrap">
+                                                <span class="col-indicator indicator-progress"></span>
+                                                <span class="mini-col-name">قيد التنفيذ</span>
+                                            </div>
+                                            <span class="mini-col-counter" id="hero-cnt-progress">1</span>
+                                        </div>
+                                        <div class="mini-col-cards" id="hero-list-progress">
+                                            <div class="mini-task-card is-active-task" draggable="true" data-id="h2"
+                                                data-cat="work" data-prio="important">
+                                                <div class="mini-card-tags">
+                                                    <span class="category-pill pill-work">شغل</span>
+                                                    <span class="priority-pill pill-important">مهمة</span>
+                                                </div>
+                                                <h4 class="mini-card-title">إعداد تقرير تسليم المرحلة الأولى</h4>
+                                                <div class="mini-card-meta">
+                                                    <span class="meta-time">
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2">
+                                                            <circle cx="12" cy="12" r="10"></circle>
+                                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                                        </svg>
+                                                        ساعتان
+                                                    </span>
+                                                    <button type="button" class="mini-card-move-btn btn-complete"
+                                                        onclick="moveHeroCard('h2', 'completed')" title="إكمال المهمة">
+                                                        إكمال ✓
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Column 3: Completed -->
+                                    <div class="mini-kanban-col" data-col="completed">
+                                        <div class="mini-col-header header-completed">
+                                            <div class="mini-col-title-wrap">
+                                                <span class="col-indicator indicator-completed"></span>
+                                                <span class="mini-col-name">مكتملة</span>
+                                            </div>
+                                            <span class="mini-col-counter" id="hero-cnt-completed">2</span>
+                                        </div>
+                                        <div class="mini-col-cards" id="hero-list-completed">
+                                            <div class="mini-task-card is-done-task" draggable="true" data-id="h3"
+                                                data-cat="body" data-prio="normal">
+                                                <div class="mini-card-tags">
+                                                    <span class="category-pill pill-body">جسم</span>
+                                                    <span class="priority-pill pill-normal">عادية</span>
+                                                </div>
+                                                <h4 class="mini-card-title">تمرين اللياقة الصباحي والتمدد</h4>
+                                                <div class="mini-card-meta">
+                                                    <span class="meta-time">
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2">
+                                                            <circle cx="12" cy="12" r="10"></circle>
+                                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                                        </svg>
+                                                        ساعة
+                                                    </span>
+                                                    <span class="badge-done-mark">تم بنجاح ✓</span>
+                                                </div>
+                                            </div>
+                                            <div class="mini-task-card is-done-task" draggable="true" data-id="h4"
+                                                data-cat="study" data-prio="important">
+                                                <div class="mini-card-tags">
+                                                    <span class="category-pill pill-study">دراسة</span>
+                                                    <span class="priority-pill pill-important">مهمة</span>
+                                                </div>
+                                                <h4 class="mini-card-title">مراجعة المفاهيم وحل المسائل</h4>
+                                                <div class="mini-card-meta">
+                                                    <span class="meta-time">
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2">
+                                                            <circle cx="12" cy="12" r="10"></circle>
+                                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                                        </svg>
+                                                        ساعة
+                                                    </span>
+                                                    <span class="badge-done-mark">تم بنجاح ✓</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+           03 — VALUE PROPOSITION (القيم الأساسية لإنجاز)
+           ========================================================================== -->
+        <section class="landing-section section-value" id="value-prop">
+            <div class="landing-container">
+                <div class="section-header-center">
+                    <h2 class="section-title">لماذا صُمم إنجاز ليكون رفيقك اليومي؟</h2>
+                    <p class="section-subtitle">
+                        تجربة إنتاجية هادئة صُممت لإبعاد التشتت وتمكينك من التركيز على ما يهم حقاً في يومك.
+                    </p>
+                </div>
+
+                <div class="value-grid">
+                    <!-- Item 1: تنظيم اليوم -->
+                    <div class="value-box">
+                        <div class="value-icon-wrap icon-blue">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </div>
+                        <h3 class="value-title">تنظيم اليوم</h3>
+                        <p class="value-desc">
+                            حصر مهام اليوم الحالي في مكان واحد واضح دون تراكم أو تشتت بين قوائم لا تنتهي، مما يمنح ذهنك
+                            الهدوء والتركيز.
+                        </p>
+                    </div>
+
+                    <!-- Item 2: وضوح المهام -->
+                    <div class="value-box">
+                        <div class="value-icon-wrap icon-gold">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                        </div>
+                        <h3 class="value-title">وضوح المهام</h3>
+                        <p class="value-desc">
+                            توصيف دقيق لكل مهمة مع تصنيفها وأولويتها والوقت المتوقع لإنجازها لتحديد نقطة انطلاقك دون
+                            تردد.
+                        </p>
+                    </div>
+
+                    <!-- Item 3: متابعة التقدم -->
+                    <div class="value-box">
+                        <div class="value-icon-wrap icon-emerald">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                                <polyline points="16 7 22 7 22 13"></polyline>
+                            </svg>
+                        </div>
+                        <h3 class="value-title">متابعة التقدم</h3>
+                        <p class="value-desc">
+                            مؤشرات بصرية حية تعرض عدد المهام الكلية والمكتملة مع نسبة الإنجاز اللحظية لترى ثمرة جهدك
+                            تكبر خطوة بخطوة.
+                        </p>
+                    </div>
+
+                    <!-- Item 4: التركيز على الإنجاز -->
+                    <div class="value-box">
+                        <div class="value-icon-wrap icon-purple">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="6"></circle>
+                                <circle cx="12" cy="12" r="2"></circle>
+                            </svg>
+                        </div>
+                        <h3 class="value-title">التركيز على الإنجاز</h3>
+                        <p class="value-desc">
+                            نظام سحب وإفلات بديهي يحوّل المهام من حالة الانتظار إلى قيد التنفيذ ثم الإتمام بكل سلاسة
+                            وسرعة.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+           04 — HOW IT WORKS (أضف → نظّم → تابع → أنجز)
+           ========================================================================== -->
+        <section class="landing-section section-how-it-works" id="how-it-works">
+            <div class="landing-container">
+                <div class="section-header-center">
+                    <h2 class="section-title">كيف يحقق إنجاز انسيابية يومك؟</h2>
+                    <p class="section-subtitle">
+                        أربع خطوات بديهية تحول يومك من فوضى المهام إلى مسار واضح وقابل للإتمام.
+                    </p>
+                </div>
+
+                <div class="steps-flow-container">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge">01</span>
+                            <span class="step-label-ar">أضف</span>
+                        </div>
+                        <div class="step-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="16"></line>
+                                <line x1="8" y1="12" x2="16" y2="12"></line>
+                            </svg>
+                        </div>
+                        <h3 class="step-title">أضف المهمة</h3>
+                        <p class="step-desc">
+                            سجّل المهمة مع تحديد عنوانها، تصنيفها المناسب، درجتها من الأهمية، والوقت المقدر لإتمامها.
+                        </p>
+                    </div>
+
+                    <div class="step-arrow" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge">02</span>
+                            <span class="step-label-ar">نظّم</span>
+                        </div>
+                        <div class="step-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </div>
+                        <h3 class="step-title">نظّم الأولويات</h3>
+                        <p class="step-desc">
+                            تتوزع المهام تلقائياً على لوحة الكانبان وتبدأ في خانة الانتظار لتمنحك رؤية بانورامية لما
+                            ينتظرك.
+                        </p>
+                    </div>
+
+                    <div class="step-arrow" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge">03</span>
+                            <span class="step-label-ar">تابع</span>
+                        </div>
+                        <div class="step-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="5 9 2 12 5 15"></polyline>
+                                <polyline points="9 5 12 2 15 5"></polyline>
+                                <polyline points="15 19 12 22 9 19"></polyline>
+                                <polyline points="19 9 22 12 19 15"></polyline>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <line x1="12" y1="2" x2="12" y2="22"></line>
+                            </svg>
+                        </div>
+                        <h3 class="step-title">تابع التقدم</h3>
+                        <p class="step-desc">
+                            اسحب المهمة إلى "قيد التنفيذ" أثناء عملك عليها لتظل مركزاً على هدف واحد دون تشويش.
+                        </p>
+                    </div>
+
+                    <div class="step-arrow" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge">04</span>
+                            <span class="step-label-ar">أنجز</span>
+                        </div>
+                        <div class="step-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        </div>
+                        <h3 class="step-title">أنجز واختم يومك</h3>
+                        <p class="step-desc">
+                            انقل المهمة إلى "مكتملة"، وشاهد نسبة إنجازك اليومية ترتفع بشعور حقيقي بالرضا والإنتاجية.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+           05 — CORE FEATURES (المميزات الرئيسية الموثقة)
+           ========================================================================== -->
+        <section class="landing-section section-features" id="features">
+            <div class="landing-container">
+                <div class="section-header-center">
+                    <h2 class="section-title">كل ما تحتاجه لإدارة مهامك بإتقان</h2>
+                    <p class="section-subtitle">
+                        مجموعة مميزات مدروسة بعناية لتجربة استخدام فائقة الراحة والسرعة.
+                    </p>
+                </div>
+
+                <div class="features-grid">
+                    <!-- Feature 1: إدارة المهام -->
+                    <div class="feature-card">
+                        <div class="feature-icon icon-blue">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">إدارة المهام المفصلة</h3>
+                        <p class="feature-desc">
+                            إضافة مهام تحتوي على كافة التفاصيل: العنوان، الوصف الدقيق، التصنيف، الأهمية، والوقت المتوقع
+                            للإنجاز.
+                        </p>
+                    </div>
+
+                    <!-- Feature 2: لوحة Kanban -->
+                    <div class="feature-card">
+                        <div class="feature-icon icon-gold">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="9" y1="3" x2="9" y2="21"></line>
+                                <line x1="15" y1="3" x2="15" y2="21"></line>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">لوحة كانبان الذكية</h3>
+                        <p class="feature-desc">
+                            تقسيم طبيعي ومرتب لتدفق العمل عبر 3 حالات واضحة: قيد الانتظار، قيد التنفيذ، ومكتملة.
+                        </p>
+                    </div>
+
+                    <!-- Feature 3: Drag & Drop -->
+                    <div class="feature-card">
+                        <div class="feature-icon icon-emerald">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="5 9 2 12 5 15"></polyline>
+                                <polyline points="9 5 12 2 15 5"></polyline>
+                                <polyline points="15 19 12 22 9 19"></polyline>
+                                <polyline points="19 9 22 12 19 15"></polyline>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <line x1="12" y1="2" x2="12" y2="22"></line>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">سحب وإفلات بديهي (Drag & Drop)</h3>
+                        <p class="feature-desc">
+                            حرك بطاقات المهام بحرية وسلاسة بين الأعمدة لتحديث حالتها فوراً مع حركات تفاعلية مريحة للعين.
+                        </p>
+                    </div>
+
+                    <!-- Feature 4: متابعة الإنجاز -->
+                    <div class="feature-card">
+                        <div class="feature-icon icon-purple">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 6v6l4 2"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">متابعة الإنجاز والنسبة المئوية</h3>
+                        <p class="feature-desc">
+                            عداد حي للمهام المنجزة والمتبقية ومؤشر نسبة إنجاز مئوية يتحدث تلقائياً مع كل مهمة تكملها.
+                        </p>
+                    </div>
+
+                    <!-- Feature 5: تنظيم التصنيفات -->
+                    <div class="feature-card">
+                        <div class="feature-icon icon-amber">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z">
+                                </path>
+                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">تصنيفات حياتية شاملة</h3>
+                        <p class="feature-desc">
+                            تنظيم متوازن يشمل جوانب يومك الأربعة: <strong>دينية</strong>، <strong>جسم</strong>،
+                            <strong>شغل</strong>، و<strong>دراسة</strong> بألوان مميزة.
+                        </p>
+                    </div>
+
+                    <!-- Feature 6: إدارة الأولويات -->
+                    <div class="feature-card">
+                        <div class="feature-icon icon-rose">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon
+                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                                </polygon>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">إدارة الأولويات بوضوح</h3>
+                        <p class="feature-desc">
+                            تمييز المهام الحرجة (مهمة / عادية) لإبراز ما يتطلب انتباهك الفوري أولاً دون إغفال المهام
+                            الروتينية.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+           06 — KANBAN PRODUCT SHOWCASE (العرض التفاعلي الكامل للوحة)
+           ========================================================================== -->
+        <section class="landing-section section-kanban-showcase" id="kanban-preview">
+            <div class="landing-container">
+                <div class="section-header-center">
+                    <h2 class="section-title">تجربة كانبان حقيقية بين يديك</h2>
+                    <p class="section-subtitle">
+                        جرب تفاعل اللوحة الآن: انقل البطاقات بين الأعمدة وراقب تحديث العداد ونسبة الإنجاز فورياً.
+                    </p>
+                </div>
+
+                <!-- Showcase Categories Filter Bar -->
+                <div class="showcase-category-filters" role="group" aria-label="تصفية حسب التصنيف">
+                    <button type="button" class="cat-filter-btn active" data-filter="all">جميع التصنيفات</button>
+                    <button type="button" class="cat-filter-btn" data-filter="religious">دينية</button>
+                    <button type="button" class="cat-filter-btn" data-filter="body">جسم</button>
+                    <button type="button" class="cat-filter-btn" data-filter="work">شغل</button>
+                    <button type="button" class="cat-filter-btn" data-filter="study">دراسة</button>
+                </div>
+
+                <!-- Main Interactive Kanban Demo Container -->
+                <div class="interactive-kanban-board" id="interactive-kanban">
+                    <!-- Column 1: Pending -->
+                    <div class="kanban-demo-column" data-status="pending">
+                        <div class="demo-col-header">
+                            <div class="demo-col-title-group">
+                                <span class="status-indicator-dot dot-pending" aria-hidden="true"></span>
+                                <h3 class="demo-col-title">قيد الانتظار</h3>
+                            </div>
+                            <span class="demo-col-badge" id="demo-count-pending">2</span>
+                        </div>
+                        <div class="demo-col-dropzone" id="zone-pending">
+                            <!-- Card 1 -->
+                            <div class="demo-task-card" draggable="true" data-id="c1" data-cat="religious"
+                                data-prio="important">
+                                <div class="demo-card-head">
+                                    <span class="category-pill pill-religious">دينية</span>
+                                    <span class="priority-pill pill-important">مهمة</span>
+                                </div>
+                                <h4 class="demo-card-title">قراءة الورد اليومي وصلاة الضحى</h4>
+                                <p class="demo-card-desc">الحرص على أذكار الصباح وتلاوة الجزء المخصص لليوم.</p>
+                                <div class="demo-card-foot">
+                                    <span class="demo-time-tag">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        أقل من ساعة
+                                    </span>
+                                    <button type="button" class="demo-action-btn"
+                                        onclick="transferCard('c1', 'progress')" title="بدء المهمة">
+                                        بدء التنفيذ ←
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Card 2 -->
+                            <div class="demo-task-card" draggable="true" data-id="c2" data-cat="study"
+                                data-prio="normal">
+                                <div class="demo-card-head">
+                                    <span class="category-pill pill-study">دراسة</span>
+                                    <span class="priority-pill pill-normal">عادية</span>
+                                </div>
+                                <h4 class="demo-card-title">مراجعة الفصل التعليمي وحل التطبيقات</h4>
+                                <p class="demo-card-desc">استكمال التمارين العملية وتدوين الملاحظات الرئيسية.</p>
+                                <div class="demo-card-foot">
+                                    <span class="demo-time-tag">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        ساعة
+                                    </span>
+                                    <button type="button" class="demo-action-btn"
+                                        onclick="transferCard('c2', 'progress')" title="بدء المهمة">
+                                        بدء التنفيذ ←
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Progress -->
+                    <div class="kanban-demo-column" data-status="progress">
+                        <div class="demo-col-header">
+                            <div class="demo-col-title-group">
+                                <span class="status-indicator-dot dot-progress" aria-hidden="true"></span>
+                                <h3 class="demo-col-title">قيد التنفيذ</h3>
+                            </div>
+                            <span class="demo-col-badge" id="demo-count-progress">1</span>
+                        </div>
+                        <div class="demo-col-dropzone" id="zone-progress">
+                            <!-- Card 3 -->
+                            <div class="demo-task-card is-active-flow" draggable="true" data-id="c3" data-cat="work"
+                                data-prio="important">
+                                <div class="demo-card-head">
+                                    <span class="category-pill pill-work">شغل</span>
+                                    <span class="priority-pill pill-important">مهمة</span>
+                                </div>
+                                <h4 class="demo-card-title">إعداد العرض التقديمي النهائي للمشروع</h4>
+                                <p class="demo-card-desc">مراجعة الشرائح، تدقيق الأرقام، وتجهيز النقاط المحورية.</p>
+                                <div class="demo-card-foot">
+                                    <span class="demo-time-tag">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        ساعتان
+                                    </span>
+                                    <div class="demo-btn-group">
+                                        <button type="button" class="demo-action-btn btn-back"
+                                            onclick="transferCard('c3', 'pending')" title="إرجاع للانتظار">
+                                            → انتظار
+                                        </button>
+                                        <button type="button" class="demo-action-btn btn-success"
+                                            onclick="transferCard('c3', 'completed')" title="إتمام المهمة">
+                                            إتمام ✓
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 3: Completed -->
+                    <div class="kanban-demo-column" data-status="completed">
+                        <div class="demo-col-header">
+                            <div class="demo-col-title-group">
+                                <span class="status-indicator-dot dot-completed" aria-hidden="true"></span>
+                                <h3 class="demo-col-title">مكتملة</h3>
+                            </div>
+                            <span class="demo-col-badge" id="demo-count-completed">1</span>
+                        </div>
+                        <div class="demo-col-dropzone" id="zone-completed">
+                            <!-- Card 4 -->
+                            <div class="demo-task-card is-completed-flow" draggable="true" data-id="c4" data-cat="body"
+                                data-prio="normal">
+                                <div class="demo-card-head">
+                                    <span class="category-pill pill-body">جسم</span>
+                                    <span class="priority-pill pill-normal">عادية</span>
+                                </div>
+                                <h4 class="demo-card-title">جلسة تدريب وتمرين المقاومة البدني</h4>
+                                <p class="demo-card-desc">إتمام جدول التمارين المجدول وشرب كمية الماء الكافية.</p>
+                                <div class="demo-card-foot">
+                                    <span class="demo-time-tag">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        ساعة
+                                    </span>
+                                    <button type="button" class="demo-action-btn btn-back"
+                                        onclick="transferCard('c4', 'progress')" title="إعادة فتح المهمة">
+                                        إعادة فتح ←
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Showcase Interactive Helper Tip -->
+                <div class="showcase-tip-banner">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-gold-base)"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <span><strong>تلميح تفاعلي:</strong> يمكنك سحب وإفلات أي بطاقة مباشرة بين الأعمدة أو استخدام أزرار
+                        التحويل السريع!</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+           07 — DAILY PROGRESS SECTION (متابعة الإنجاز اليومي)
+           ========================================================================== -->
+        <section class="landing-section section-progress" id="progress">
+            <div class="landing-container">
+                <div class="progress-split-layout">
+                    <!-- Progress Information -->
+                    <div class="progress-info-side">
+                        <h2 class="section-title">مؤشرات إنجاز دقيقة لليوم الحالي</h2>
+                        <p class="section-subtitle-left">
+                            تمنحك لوحة إنجاز قياساً بصرياً فورياً لما تم تحقيقه خلال اليوم، مما يعزز دافعيتك ويحافظ على
+                            استمرارية إنتاجيتك.
+                        </p>
+
+                        <div class="progress-points-list">
+                            <div class="progress-point">
+                                <div class="point-bullet bullet-gold"></div>
+                                <div class="point-content">
+                                    <h4 class="point-title">رؤية يومية مخصصة</h4>
+                                    <p class="point-text">فلترة تلقائية لعرض مهام اليوم فقط، لتبدأ يومك بذهن صافٍ دون
+                                        إرهاق بالقوائم المستقبلية.</p>
+                                </div>
+                            </div>
+
+                            <div class="progress-point">
+                                <div class="point-bullet bullet-blue"></div>
+                                <div class="point-content">
+                                    <h4 class="point-title">نسبة إنجاز تفاعلية حية</h4>
+                                    <p class="point-text">حساب فوري للنسبة المئوية مع كل مهمة تنتقل إلى قائمة الاكتمال
+                                        مع تمييز لوني دقيق.</p>
+                                </div>
+                            </div>
+
+                            <div class="progress-point">
+                                <div class="point-bullet bullet-emerald"></div>
+                                <div class="point-content">
+                                    <h4 class="point-title">توازن بين جوانب الحياة</h4>
+                                    <p class="point-text">توزيع مهامك بين الجانب الديني، الصحي، العملي، والدراسي لضمان
+                                        نمط حياة متزن.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Interactive Dashboard Visual Card -->
+                    <div class="progress-visual-card">
+                        <div class="progress-card-inner">
+                            <div class="progress-card-header">
+                                <div class="progress-card-title-group">
+                                    <span class="progress-pulse-dot" aria-hidden="true"></span>
+                                    <span class="progress-card-label">حالة إنجاز اليوم</span>
+                                </div>
+                                <span class="progress-date-tag">اليوم الحالي</span>
+                            </div>
+
+                            <!-- Circular Progress Ring Visual -->
+                            <div class="progress-meter-center">
+                                <div class="circular-progress-wrap">
+                                    <svg class="circular-chart" viewBox="0 0 36 36">
+                                        <path class="circle-bg" d="M18 2.0845
+                                            a 15.9155 15.9155 0 0 1 0 31.831
+                                            a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                        <path class="circle-fill" id="demo-circular-fill" stroke-dasharray="25, 100" d="M18 2.0845
+                                            a 15.9155 15.9155 0 0 1 0 31.831
+                                            a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    </svg>
+                                    <div class="progress-number-overlay">
+                                        <span class="progress-big-number" id="demo-progress-percent-val">25%</span>
+                                        <span class="progress-sub-caption">نسبة الإنجاز</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Metrics Strip -->
+                            <div class="progress-metrics-strip">
+                                <div class="metric-card-box">
+                                    <span class="metric-box-num" id="demo-metric-total">4</span>
+                                    <span class="metric-box-label">إجمالي المهام</span>
+                                </div>
+                                <div class="metric-card-box">
+                                    <span class="metric-box-num text-pending" id="demo-metric-pending">2</span>
+                                    <span class="metric-box-label">قيد الانتظار</span>
+                                </div>
+                                <div class="metric-card-box">
+                                    <span class="metric-box-num text-progress" id="demo-metric-progress">1</span>
+                                    <span class="metric-box-label">قيد التنفيذ</span>
+                                </div>
+                                <div class="metric-card-box">
+                                    <span class="metric-box-num text-completed" id="demo-metric-completed">1</span>
+                                    <span class="metric-box-label">مكتملة</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+           08 — FOCUS & DAILY EXPERIENCE (فلسفة التركيز اليومي)
+           ========================================================================== -->
+        <section class="landing-section section-philosophy" id="philosophy">
+            <div class="landing-container">
+                <div class="philosophy-container">
+                    <div class="philosophy-backdrop-pattern" aria-hidden="true"></div>
+                    <div class="philosophy-content">
+                        <div class="philosophy-badge">
+                            <span class="gem-mini-icon" aria-hidden="true"></span>
+                            <span>فلسفة إنجاز</span>
+                        </div>
+                        <h2 class="philosophy-title">
+                            الهدف ليس إغراقك بالمهام،<br>
+                            بل جعل يومك:
+                        </h2>
+                        <div class="philosophy-trio">
+                            <div class="trio-item">
+                                <span class="trio-num">٠١</span>
+                                <span class="trio-word">واضحًا</span>
+                                <span class="trio-desc">تعرف أولوياتك بدقة من أول لحظة في صباحك.</span>
+                            </div>
+                            <div class="trio-separator" aria-hidden="true">←</div>
+                            <div class="trio-item">
+                                <span class="trio-num">٠٢</span>
+                                <span class="trio-word">مرتبًا</span>
+                                <span class="trio-desc">كل مهمة في مكانها الصحيح وحالتها المحددة.</span>
+                            </div>
+                            <div class="trio-separator" aria-hidden="true">←</div>
+                            <div class="trio-item">
+                                <span class="trio-num">٠٣</span>
+                                <span class="trio-word">قابلاً للإنجاز</span>
+                                <span class="trio-desc">خطوات عملية واقعية تقودك لختام يومك براحة ورضا.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+           09 — FINAL CALL TO ACTION (الخاتمة والدعوة للإجراء)
+           ========================================================================== -->
+        <section class="landing-section section-final-cta" id="final-cta">
+            <div class="landing-container">
+                <div class="final-cta-card">
+                    <div class="cta-ambient-glow" aria-hidden="true"></div>
+                    <div class="final-cta-content">
+                        <h2 class="final-cta-title">رتّب يومك. تابع تقدمك. أنجز.</h2>
+                        <p class="final-cta-desc">
+                            ابدأ اليوم تجربة إدارة مهام عربية متكاملة تجمع بين جمال التصميم، وسلاسة الأداء، والوضوح
+                            الكامل.
+                        </p>
+                        <div class="final-cta-actions">
+                            <a href="auth.html" class="btn-final-primary">
+                                <span>ابدأ الآن مجاناً</span>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                                    aria-hidden="true">
+                                    <polyline points="15 18 9 12 15 6"></polyline>
+                                </svg>
+                            </a>
+                            <a href="todo.html" class="btn-final-secondary">
+                                <span>الدخول إلى لوحة المهام</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==========================================================================
+       10 — FOOTER (تذييل الصفحة الأنيق)
+       ========================================================================== -->
+    <footer class="landing-footer" role="contentinfo">
+        <div class="landing-container">
+            <div class="footer-main-grid">
+                <!-- Brand Info -->
+                <div class="footer-brand-col">
+                    <a href="landing.html" class="app-logo">
+                        <span class="logo-gem" aria-hidden="true"></span>
+                        <div class="logo-title-group">
+                            <span class="logo-text">إنجاز</span>
+                            <span class="logo-subtext" aria-hidden="true">لوحة المتابعة اليومية</span>
+                        </div>
+                    </a>
+                    <p class="footer-brand-desc">
+                        نظام إدارة ومتابعة المهام اليومية باللغة العربية. تنظيم ذكي، تركيز هادئ، وإنجاز مستمر.
+                    </p>
+                </div>
+
+                <!-- Navigation Column -->
+                <div class="footer-nav-col">
+                    <h4 class="footer-heading">روابط سريعة</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="#hero">الرئيسية</a></li>
+                        <li><a href="#how-it-works">كيف يعمل</a></li>
+                        <li><a href="#features">المميزات</a></li>
+                        <li><a href="#kanban-preview">لوحة كانبان</a></li>
+                        <li><a href="#progress">متابعة الإنجاز</a></li>
+                    </ul>
+                </div>
+
+                <!-- Product Links -->
+                <div class="footer-nav-col">
+                    <h4 class="footer-heading">التطبيق</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="auth.html">تسجيل الدخول</a></li>
+                        <li><a href="auth.html">إنشاء حساب جديد</a></li>
+                        <li><a href="todo.html">لوحة كانبان الحية</a></li>
+                        <li><a href="index.html">إضافة مهمة جديدة</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom-bar">
+                <p class="footer-copy">
+                    جميع الحقوق محفوظة &copy; <span id="footer-year">2026</span> إنجاز — نظام إدارة المهام اليومية.
+                </p>
+                <div class="footer-sub-badge">
+                    <span>صُمم وطُوّر بأعلى معايير الحرفة وجودة الأداء </span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==========================================================================
+       Client-Side Interactive Demonstration Script (Kanban Drag & Progress)
+       ========================================================================== -->
+    <script>
+        // Set dynamic date in Arabic
+        document.addEventListener('DOMContentLoaded', () => {
+            const dateBadge = document.getElementById('hero-mock-date');
+            if (dateBadge) {
+                const now = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                try {
+                    dateBadge.textContent = 'اليوم: ' + now.toLocaleDateString('ar-EG', options);
+                } catch (e) {
+                    dateBadge.textContent = 'اليوم: متابعة مباشرة';
+                }
+            }
+
+            const footerYear = document.getElementById('footer-year');
+            if (footerYear) {
+                footerYear.textContent = new Date().getFullYear();
+            }
+
+            initDemoDragAndDrop();
+            initCategoryFilters();
+            updateAllMetrics();
+        });
+
+        // Hero Mini Card Move
+        window.moveHeroCard = function (cardId, targetCol) {
+            const card = document.querySelector(`.mini-task-card[data-id="${cardId}"]`);
+            const targetList = document.getElementById(`hero-list-${targetCol}`);
+            if (!card || !targetList) return;
+
+            targetList.appendChild(card);
+
+            // Adjust card classes and actions
+            const metaWrap = card.querySelector('.mini-card-meta');
+            if (targetCol === 'pending') {
+                card.classList.remove('is-active-task', 'is-done-task');
+                metaWrap.innerHTML = `
+                    <span class="meta-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> أقل من ساعة</span>
+                    <button type="button" class="mini-card-move-btn" onclick="moveHeroCard('${cardId}', 'progress')" title="نقل إلى قيد التنفيذ">نقل للبدء ←</button>
+                `;
+            } else if (targetCol === 'progress') {
+                card.classList.add('is-active-task');
+                card.classList.remove('is-done-task');
+                metaWrap.innerHTML = `
+                    <span class="meta-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> قيد التنفيذ</span>
+                    <button type="button" class="mini-card-move-btn btn-complete" onclick="moveHeroCard('${cardId}', 'completed')" title="إكمال المهمة">إكمال ✓</button>
+                `;
+            } else if (targetCol === 'completed') {
+                card.classList.remove('is-active-task');
+                card.classList.add('is-done-task');
+                metaWrap.innerHTML = `
+                    <span class="meta-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> منجزة</span>
+                    <span class="badge-done-mark">تم بنجاح ✓</span>
+                `;
+            }
+
+            updateHeroMetrics();
+        };
+
+        function updateHeroMetrics() {
+            const pCount = document.querySelectorAll('#hero-list-pending .mini-task-card').length;
+            const prCount = document.querySelectorAll('#hero-list-progress .mini-task-card').length;
+            const cCount = document.querySelectorAll('#hero-list-completed .mini-task-card').length;
+            const total = pCount + prCount + cCount;
+
+            const pendingEl = document.getElementById('hero-cnt-pending');
+            const progressEl = document.getElementById('hero-cnt-progress');
+            const completedEl = document.getElementById('hero-cnt-completed');
+            const totalEl = document.getElementById('hero-total-tasks');
+            const completedTotalEl = document.getElementById('hero-completed-tasks');
+            const fillEl = document.getElementById('hero-progress-fill');
+            const percentEl = document.getElementById('hero-progress-percent');
+
+            if (pendingEl) pendingEl.textContent = pCount;
+            if (progressEl) progressEl.textContent = prCount;
+            if (completedEl) completedEl.textContent = cCount;
+            if (totalEl) totalEl.textContent = total;
+            if (completedTotalEl) completedTotalEl.textContent = cCount;
+
+            const pct = total > 0 ? Math.round((cCount / total) * 100) : 0;
+            if (fillEl) fillEl.style.width = pct + '%';
+            if (percentEl) percentEl.textContent = pct + '%';
+        }
+
+        // Showcase Kanban Transfer
+        window.transferCard = function (cardId, targetStatus) {
+            const card = document.querySelector(`.demo-task-card[data-id="${cardId}"]`);
+            const dropzone = document.getElementById(`zone-${targetStatus}`);
+            if (!card || !dropzone) return;
+
+            dropzone.appendChild(card);
+            applyCardStatusStyles(card, targetStatus);
+            updateAllMetrics();
+        };
+
+        function applyCardStatusStyles(card, status) {
+            const cardId = card.getAttribute('data-id');
+            const foot = card.querySelector('.demo-card-foot');
+            const cat = card.getAttribute('data-cat');
+
+            card.classList.remove('is-active-flow', 'is-completed-flow');
+
+            let timeText = 'ساعة';
+            if (cardId === 'c1') timeText = 'أقل من ساعة';
+            if (cardId === 'c3') timeText = 'ساعتان';
+
+            if (status === 'pending') {
+                foot.innerHTML = `
+                    <span class="demo-time-tag">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        ${timeText}
+                    </span>
+                    <button type="button" class="demo-action-btn" onclick="transferCard('${cardId}', 'progress')" title="بدء المهمة">بدء التنفيذ ←</button>
+                `;
+            } else if (status === 'progress') {
+                card.classList.add('is-active-flow');
+                foot.innerHTML = `
+                    <span class="demo-time-tag">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        ${timeText}
+                    </span>
+                    <div class="demo-btn-group">
+                        <button type="button" class="demo-action-btn btn-back" onclick="transferCard('${cardId}', 'pending')" title="إرجاع للانتظار">→ انتظار</button>
+                        <button type="button" class="demo-action-btn btn-success" onclick="transferCard('${cardId}', 'completed')" title="إتمام المهمة">إتمام ✓</button>
+                    </div>
+                `;
+            } else if (status === 'completed') {
+                card.classList.add('is-completed-flow');
+                foot.innerHTML = `
+                    <span class="demo-time-tag">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        ${timeText}
+                    </span>
+                    <button type="button" class="demo-action-btn btn-back" onclick="transferCard('${cardId}', 'progress')" title="إعادة فتح المهمة">إعادة فتح ←</button>
+                `;
+            }
+        }
+
+        function updateAllMetrics() {
+            const p = document.querySelectorAll('#zone-pending .demo-task-card').length;
+            const pr = document.querySelectorAll('#zone-progress .demo-task-card').length;
+            const c = document.querySelectorAll('#zone-completed .demo-task-card').length;
+            const total = p + pr + c;
+
+            // Badges in columns
+            const badgeP = document.getElementById('demo-count-pending');
+            const badgePr = document.getElementById('demo-count-progress');
+            const badgeC = document.getElementById('demo-count-completed');
+            if (badgeP) badgeP.textContent = p;
+            if (badgePr) badgePr.textContent = pr;
+            if (badgeC) badgeC.textContent = c;
+
+            // Progress section metrics
+            const metricTotal = document.getElementById('demo-metric-total');
+            const metricP = document.getElementById('demo-metric-pending');
+            const metricPr = document.getElementById('demo-metric-progress');
+            const metricC = document.getElementById('demo-metric-completed');
+            const progressPercentVal = document.getElementById('demo-progress-percent-val');
+            const circularFill = document.getElementById('demo-circular-fill');
+
+            if (metricTotal) metricTotal.textContent = total;
+            if (metricP) metricP.textContent = p;
+            if (metricPr) metricPr.textContent = pr;
+            if (metricC) metricC.textContent = c;
+
+            const pct = total > 0 ? Math.round((c / total) * 100) : 0;
+            if (progressPercentVal) progressPercentVal.textContent = pct + '%';
+            if (circularFill) {
+                circularFill.setAttribute('stroke-dasharray', `${pct}, 100`);
+            }
+        }
+
+        // Drag & Drop Implementation
+        function initDemoDragAndDrop() {
+            const cards = document.querySelectorAll('.demo-task-card');
+            const zones = document.querySelectorAll('.demo-col-dropzone');
+
+            cards.forEach(card => {
+                card.addEventListener('dragstart', (e) => {
+                    card.classList.add('is-dragging');
+                    e.dataTransfer.setData('text/plain', card.getAttribute('data-id'));
+                });
+
+                card.addEventListener('dragend', () => {
+                    card.classList.remove('is-dragging');
+                });
+            });
+
+            zones.forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('drag-hover');
+                });
+
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-hover');
+                });
+
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-hover');
+                    const cardId = e.dataTransfer.getData('text/plain');
+                    const card = document.querySelector(`.demo-task-card[data-id="${cardId}"]`);
+                    if (card) {
+                        zone.appendChild(card);
+                        const status = zone.closest('.kanban-demo-column').getAttribute('data-status');
+                        applyCardStatusStyles(card, status);
+                        updateAllMetrics();
+                    }
+                });
+            });
+        }
+
+        // Category Filter for Showcase
+        function initCategoryFilters() {
+            const filterBtns = document.querySelectorAll('.cat-filter-btn');
+            const cards = document.querySelectorAll('.demo-task-card');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const cat = btn.getAttribute('data-filter');
+                    cards.forEach(card => {
+                        if (cat === 'all' || card.getAttribute('data-cat') === cat) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>

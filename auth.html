@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة تسجيل الدخول وحساب جديد | إنجاز</title>
+    <!-- Google Fonts: Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./source/API/Auth_function.js" defer></script>
+    <script src="./source/Actions_js/auth.js" defer></script>
+    <script src="./source/Actions_js/page_transitions.js" defer></script>
+</head>
+
+<body>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <div class="auth-page-wrapper">
+        <!-- Ambient Glowing Background Elements -->
+        <div class="auth-ambient-orb orb-blue" aria-hidden="true"></div>
+        <div class="auth-ambient-orb orb-gold" aria-hidden="true"></div>
+
+        <main class="auth-card">
+            <!-- App Brand & Header -->
+            <header class="auth-header">
+                <a href="landing.html" class="app-logo">
+                    <span class="logo-gem" aria-hidden="true"></span>
+                    <div class="logo-title-group">
+                        <span class="logo-text">إنجاز</span>
+                        <span class="logo-subtext" aria-hidden="true">لوحة المتابعة اليومية</span>
+                    </div>
+                </a>
+                <h1 class="auth-title">مرحباً بك في إنجاز</h1>
+                <p class="auth-subtitle">سجل دخولك أو أنشئ حساباً جديداً لإدارة ومتابعة مهامك</p>
+            </header>
+
+            <!-- Feedback / Error Banner -->
+            <div id="auth-alert" class="auth-alert" role="alert" aria-live="assertive"></div>
+
+            <!-- Segmented Switcher (Tabs) -->
+            <div class="auth-switch-container" role="tablist" aria-label="اختيار نوع العملية">
+                <button type="button" class="auth-switch-btn active" data-tab="signin" role="tab" aria-selected="true" id="tab-signin">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                        <polyline points="10 17 15 12 10 7"></polyline>
+                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                    </svg>
+                    تسجيل الدخول
+                </button>
+                <button type="button" class="auth-switch-btn" data-tab="signup" role="tab" aria-selected="false" id="tab-signup">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <line x1="20" y1="8" x2="20" y2="14"></line>
+                        <line x1="23" y1="11" x2="17" y2="11"></line>
+                    </svg>
+                    إنشاء حساب جديد
+                </button>
+            </div>
+
+            <!-- 1. Sign In Form -->
+            <form id="signin-form" class="auth-form active-form" novalidate>
+                <div class="auth-input-group">
+                    <label for="signin-email" class="auth-label">البريد الإلكتروني أو اسم المستخدم</label>
+                    <div class="auth-input-wrapper">
+                        <input type="email" id="signin-email" class="auth-input" placeholder="name@example.com" required autocomplete="email">
+                        <span class="auth-input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="auth-input-group">
+                    <label for="signin-password" class="auth-label">
+                        <span>كلمة المرور</span>
+                        <a href="#forgot" class="auth-link" style="font-size: 0.8rem;">نسيت كلمة المرور؟</a>
+                    </label>
+                    <div class="auth-input-wrapper">
+                        <input type="password" id="signin-password" class="auth-input" placeholder="••••••••" required autocomplete="current-password">
+                        <span class="auth-input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </span>
+                        <button type="button" class="auth-password-toggle" data-target="signin-password" title="إظهار/إخفاء كلمة المرور" aria-label="إظهار كلمة المرور">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="auth-extra-row">
+                    <label class="auth-checkbox-label">
+                        <input type="checkbox" id="signin-remember">
+                        <span>تذكر بيانات دخولي</span>
+                    </label>
+                </div>
+
+                <button type="submit" id="btn-submit-signin" class="btn-auth-submit">
+                    <span>تسجيل الدخول</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+            </form>
+
+            <!-- 2. Sign Up Form -->
+            <form id="signup-form" class="auth-form" novalidate>
+                <div class="auth-input-group">
+                    <label for="signup-name" class="auth-label">الاسم الكامل</label>
+                    <div class="auth-input-wrapper">
+                        <input type="text" id="signup-name" class="auth-input" placeholder="مثال: أحمد الجلاب" required autocomplete="name">
+                        <span class="auth-input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="auth-input-group">
+                    <label for="signup-email" class="auth-label">البريد الإلكتروني</label>
+                    <div class="auth-input-wrapper">
+                        <input type="email" id="signup-email" class="auth-input" placeholder="name@example.com" required autocomplete="email">
+                        <span class="auth-input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="auth-input-group">
+                    <label for="signup-password" class="auth-label">كلمة المرور الجديدة</label>
+                    <div class="auth-input-wrapper">
+                        <input type="password" id="signup-password" class="auth-input" placeholder="8 أحرف على الأقل" required autocomplete="new-password">
+                        <span class="auth-input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </span>
+                        <button type="button" class="auth-password-toggle" data-target="signup-password" title="إظهار/إخفاء كلمة المرور" aria-label="إظهار كلمة المرور">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- User Role / Account Type Selector -->
+                <div class="auth-input-group">
+                    <label class="auth-label">نوع الحساب / الصلاحية</label>
+                    <div class="auth-role-group">
+                        <label class="auth-role-option">
+                            <input type="radio" name="user_role" value="member" checked>
+                            <span class="role-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                </svg>
+                            </span>
+                            <span class="role-title">عضو فريق</span>
+                        </label>
+
+                        <label class="auth-role-option">
+                            <input type="radio" name="user_role" value="lead">
+                            <span class="role-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </span>
+                            <span class="role-title">مشرف مهام</span>
+                        </label>
+
+                        <label class="auth-role-option">
+                            <input type="radio" name="user_role" value="admin">
+                            <span class="role-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                </svg>
+                            </span>
+                            <span class="role-title">مدير نظام</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="auth-extra-row">
+                    <label class="auth-checkbox-label">
+                        <input type="checkbox" id="signup-terms" required checked>
+                        <span>أوافق على الشروط وسياسة الاستخدام</span>
+                    </label>
+                </div>
+
+                <button type="submit" id="btn-submit-signup" class="btn-auth-submit">
+                    <span>إنشاء الحساب</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+            </form>
+
+            <footer class="auth-footer-note">
+                نظام إدارة ومتابعة المهام اليومية - إنجاز v1.0
+            </footer>
+        </main>
+    </div>
+
+</body>
+</html>

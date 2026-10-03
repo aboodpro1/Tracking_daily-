@@ -11,7 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./source/API/Auth_function.js" defer></script>
     <script src="./source/API/Board_function.js" defer></script>
+    <script src="./source/Actions_js/page_transitions.js" defer></script>
 </head>
 
 <body>
@@ -62,6 +64,79 @@
                         </li>
                     </ul>
                 </nav>
+
+                <!-- Logged In User Profile & Dropdown -->
+                <div class="navbar-user-area" id="navbar-user-area">
+                    <!-- User Profile Trigger Button -->
+                    <button type="button" class="user-menu-trigger" id="user-menu-trigger" aria-haspopup="true" aria-expanded="false" aria-label="قائمة المستخدم">
+                        <div class="user-avatar-wrapper">
+                            <div class="user-avatar" id="nav-user-avatar">م</div>
+                            <span class="user-online-dot" title="متصل الآن" aria-hidden="true"></span>
+                        </div>
+                        <div class="user-meta-text">
+                            <span class="user-meta-name" id="nav-user-name">المستخدم</span>
+                            <span class="user-meta-role" id="nav-user-role">عضو فريق</span>
+                        </div>
+                        <span class="user-chevron" aria-hidden="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </button>
+
+                    <!-- Luxury Floating Dropdown Card -->
+                    <div class="user-dropdown-card" id="user-dropdown-card" role="menu" aria-label="بيانات الحساب والإجراءات">
+                        <div class="dropdown-header">
+                            <div class="dropdown-avatar" id="dropdown-user-avatar">م</div>
+                            <div class="dropdown-details">
+                                <span class="dropdown-name" id="dropdown-user-name">المستخدم</span>
+                                <span class="dropdown-email" id="dropdown-user-email">user@example.com</span>
+                                <span class="dropdown-role-badge">
+                                    <span class="badge-dot" style="width: 5px; height: 5px; background: currentColor; border-radius: 50%;"></span>
+                                    <span id="dropdown-user-role">عضو فريق</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <ul class="dropdown-actions-list">
+                            <li>
+                                <a href="index.html" class="dropdown-btn">
+                                    <span class="dropdown-btn-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 5v14M5 12h14"></path>
+                                        </svg>
+                                    </span>
+                                    <span>إضافة مهمة جديدة</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="todo.html" class="dropdown-btn">
+                                    <span class="dropdown-btn-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="3" width="7" height="7"></rect>
+                                            <rect x="14" y="3" width="7" height="7"></rect>
+                                            <rect x="14" y="14" width="7" height="7"></rect>
+                                            <rect x="3" y="14" width="7" height="7"></rect>
+                                        </svg>
+                                    </span>
+                                    <span>لوحة المهام</span>
+                                </a>
+                            </li>
+                            <li>
+                                <button type="button" class="dropdown-btn btn-danger" onclick="logoutUser()">
+                                    <span class="dropdown-btn-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                            <polyline points="16 17 21 12 16 7"></polyline>
+                                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                                        </svg>
+                                    </span>
+                                    <span>تسجيل الخروج</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </header>
 

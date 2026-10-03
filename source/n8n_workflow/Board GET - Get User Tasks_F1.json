@@ -1,0 +1,333 @@
+{
+  "name": "Board GET - Get User Tasks_F1",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "Get-database",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "f533151d-4be2-429d-a33a-b6f0d8126a59",
+      "name": "Board GET Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -304,
+        672
+      ],
+      "webhookId": "Get-database"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ab374135-54e4-467d-a7c7-00192becbf10",
+                    "leftValue": "={{ $json.query.Get }}",
+                    "rightValue": "get_all_tasks",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "8c07d8f0-0d2f-4244-85d8-5574723908c9",
+      "name": "Board Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -80,
+        672
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Extract query parameters from webhook\nconst query = $json.query || $json;\n\n// 2. Extract authenticated user identifiers\nconst authenticatedUserId = String(query.userId || query['user ID'] || query.id || '').trim();\nconst userEmail = String(query.userEmail || query.email || '').trim().toLowerCase();\nconst dateFilter = String(query.date || '').trim();\nconst getAction = String(query.Get || query.action || 'get_all_tasks').trim();\n\n// 3. Validate user authentication context\nif (!authenticatedUserId && !userEmail) {\n  return {\n    json: {\n      isError: true,\n      statusCode: 401,\n      error: {\n        message: 'المستخدم غير مصادق، يرجى تسجيل الدخول أولاً لعرض المهام',\n        code: 'UNAUTHENTICATED_USER',\n        field: 'userId'\n      }\n    }\n  };\n}\n\nreturn {\n  json: {\n    isError: false,\n    databaseId: '3dc6fd16-45b0-8072-9e75-fb87ba35ed28',\n    usersDatabaseId: '3dc6fd16-45b0-80ff-8435-c255ed191886',\n    userId: authenticatedUserId,\n    'user ID': authenticatedUserId,\n    userEmail: userEmail,\n    date: dateFilter,\n    Get: getAction\n  }\n};"
+      },
+      "id": "362a6228-dcfd-41bf-a8af-4684c6a64d30",
+      "name": "Extract and Validate GET Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        608
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "auth-validation-check",
+              "leftValue": "={{ $json.isError }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "false"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ba4f1e36-10d4-4255-8b8f-863b5d5c71bd",
+      "name": "Check User Authentication",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        368,
+        608
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "3dc6fd16-45b0-8072-9e75-fb87ba35ed28",
+          "mode": "id"
+        },
+        "returnAll": true,
+        "filterType": "manual",
+        "filters": {
+          "conditions": [
+            {
+              "key": "User_ID|rich_text",
+              "condition": "equals",
+              "richTextValue": "={{ $json['user ID'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4b71a867-6f87-4ea8-9d2e-cd8af3efba3c",
+      "name": "Get Tasks from Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        592,
+        528
+      ],
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "notionApi": {
+          "id": "0TCcf4zTvlMZvqe6",
+          "name": "fromdarknesstolight2026@gmail.com"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Extract target user credentials from validation node\nconst userContext = $('Extract and Validate GET Request').first().json;\nconst targetUserId = String(userContext.userId || userContext['user ID'] || '').trim();\nconst targetEmail = String(userContext.userEmail || '').trim().toLowerCase();\nconst dateFilter = String(userContext.date || '').trim();\n\n// 2. Collect all task items returned by Notion\nconst items = $input.all();\nconst parsedTasks = [];\n\nfor (let i = 0; i < items.length; i++) {\n  const rawItem = items[i].json;\n  if (!rawItem || rawItem.error) continue;\n\n  const props = rawItem.properties || rawItem;\n\n  // Extract Task User ID\n  let taskUserId = '';\n  if (props['user ID']?.rich_text?.[0]?.plain_text) {\n    taskUserId = props['user ID'].rich_text[0].plain_text.trim();\n  } else if (props['user ID']?.title?.[0]?.plain_text) {\n    taskUserId = props['user ID'].title[0].plain_text.trim();\n  } else if (typeof props['user ID'] === 'string') {\n    taskUserId = props['user ID'].trim();\n  } else if (rawItem['user ID']) {\n    taskUserId = String(rawItem['user ID']).trim();\n  }\n\n  // Extract ID_task\n  let idTask = '';\n  if (props.ID_task?.rich_text?.[0]?.plain_text) {\n    idTask = props.ID_task.rich_text[0].plain_text.trim();\n  } else if (typeof props.ID_task === 'string') {\n    idTask = props.ID_task.trim();\n  } else {\n    idTask = rawItem.id || `task-${i}-${Date.now()}`;\n  }\n\n  // Filter strictly for this authenticated user\n  const isMatchingUser = targetUserId && taskUserId\n    ? (taskUserId === targetUserId || taskUserId.includes(targetUserId) || targetUserId.includes(taskUserId))\n    : true;\n\n  if (!isMatchingUser) {\n    continue;\n  }\n\n  // Extract Title\n  let title = '';\n  if (props['العنوان']?.title?.[0]?.plain_text) {\n    title = props['العنوان'].title[0].plain_text;\n  } else if (props.Title?.title?.[0]?.plain_text) {\n    title = props.Title.title[0].plain_text;\n  } else if (props.title?.title?.[0]?.plain_text) {\n    title = props.title.title[0].plain_text;\n  } else if (props.name) {\n    title = props.name;\n  }\n\n  // Extract Description\n  let description = '';\n  if (props['الوصف']?.rich_text?.[0]?.plain_text) {\n    description = props['الوصف'].rich_text[0].plain_text;\n  } else if (props.Description?.rich_text?.[0]?.plain_text) {\n    description = props.Description.rich_text[0].plain_text;\n  } else if (props.description) {\n    description = props.description;\n  }\n\n  // Extract Status\n  let status = 'قيد الانتظار';\n  if (props['الحالة']?.select?.name) {\n    status = props['الحالة'].select.name;\n  } else if (props['الحالة']?.status?.name) {\n    status = props['الحالة'].status.name;\n  } else if (props.Status?.status?.name) {\n    status = props.Status.status.name;\n  } else if (props.Status?.select?.name) {\n    status = props.Status.select.name;\n  } else if (props.status) {\n    status = props.status;\n  }\n\n  // Extract Category\n  let category = 'شغل';\n  if (props['التصنيف']?.select?.name) {\n    category = props['التصنيف'].select.name;\n  } else if (props.Category?.select?.name) {\n    category = props.Category.select.name;\n  } else if (props.category) {\n    category = props.category;\n  }\n\n  // Extract Priority\n  let priority = 'عادية';\n  if (props['الأهمية']?.select?.name) {\n    priority = props['الأهمية'].select.name;\n  } else if (props.Priority?.select?.name) {\n    priority = props.Priority.select.name;\n  } else if (props.priority) {\n    priority = props.priority;\n  }\n\n  // Extract Duration\n  let duration = 'أقل من ساعة';\n  if (props['الوقت المتوقع']?.select?.name) {\n    duration = props['الوقت المتوقع'].select.name;\n  } else if (props.Duration?.select?.name) {\n    duration = props.Duration.select.name;\n  } else if (props.duration) {\n    duration = props.duration;\n  }\n\n  // Extract Date\n  let taskDate = '';\n  if (props.date?.date?.start) {\n    taskDate = props.date.date.start;\n  } else if (props.Date?.date?.start) {\n    taskDate = props.Date.date.start;\n  } else if (props['التاريخ']?.date?.start) {\n    taskDate = props['التاريخ'].date.start;\n  } else if (rawItem.created_time) {\n    taskDate = rawItem.created_time.split('T')[0];\n  }\n\n  parsedTasks.push({\n    id: rawItem.id,\n    ID_task: idTask,\n    title: title || 'مهمة بدون عنوان',\n    description: description || '',\n    status: status,\n    category: category,\n    priority: priority,\n    duration: duration,\n    date: taskDate,\n    'user ID': taskUserId || targetUserId,\n    userId: taskUserId || targetUserId,\n    userEmail: targetEmail\n  });\n}\n\n// 3. Return clean, structured payload ready for Board rendering\nreturn {\n  json: {\n    success: true,\n    process: 'done',\n    status: 'success',\n    count: parsedTasks.length,\n    userId: targetUserId,\n    userEmail: targetEmail,\n    data: parsedTasks,\n    results: parsedTasks,\n    tasks: parsedTasks\n  }\n};"
+      },
+      "id": "fb32a6ba-7b73-4d4d-a5d6-3e64ae3bf55d",
+      "name": "Filter and Format Tasks for User Board",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "121efa6d-6738-4a30-bff2-e0608b812be0",
+      "name": "Respond to Board GET",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1040,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Invalid GET Action handler from Switch fallback\nconst query = $json.query || $json;\nconst receivedAction = query.Get || query.action || 'Unknown';\n\nreturn {\n  json: {\n    isError: true,\n    statusCode: 400,\n    success: false,\n    process: 'error',\n    error: {\n      message: `إجراء GET غير صالح أو غير معرّف: '${receivedAction}'`,\n      code: 'INVALID_GET_ACTION',\n      received: receivedAction\n    }\n  }\n};"
+      },
+      "id": "27911f3d-b803-4696-b29a-7633697848c9",
+      "name": "Invalid GET Action",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        592,
+        848
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": "={{ $json.statusCode || 400 }}",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "e32b7b77-1937-4320-aa01-9455d5344d43",
+      "name": "Respond with Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        816,
+        704
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Board GET Webhook": {
+      "main": [
+        [
+          {
+            "node": "Board Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Board Switch": {
+      "main": [
+        [
+          {
+            "node": "Extract and Validate GET Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid GET Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract and Validate GET Request": {
+      "main": [
+        [
+          {
+            "node": "Check User Authentication",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check User Authentication": {
+      "main": [
+        [
+          {
+            "node": "Get Tasks from Notion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond with Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Tasks from Notion": {
+      "main": [
+        [
+          {
+            "node": "Filter and Format Tasks for User Board",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond with Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter and Format Tasks for User Board": {
+      "main": [
+        [
+          {
+            "node": "Respond to Board GET",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invalid GET Action": {
+      "main": [
+        [
+          {
+            "node": "Respond with Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b66ad6cc-90ce-47fa-9849-2ea0d7eb7c75",
+  "meta": {
+    "instanceId": "74d03d59c9d7d0a463e6faecb6b66c601f743f91742a92cf73bf71edf0b4efde"
+  },
+  "nodeGroups": [],
+  "id": "nQujFQnj8u6JW5HR",
+  "tags": []
+}

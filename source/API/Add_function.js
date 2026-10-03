@@ -1,7 +1,12 @@
 
 
+<<<<<<< Updated upstream
 let UrlPostTest = "https://n8n-production-4941.up.railway.app/webhook-test/post-database"
 let UrlPost = "https://n8n-production-4941.up.railway.app/webhook/post-database"
+=======
+let UrlPostTest = "https://n8n-production-c217.up.railway.app/webhook-test/post-database";
+let UrlPost = "https://n8n-production-c217.up.railway.app/webhook/post-database";
+>>>>>>> Stashed changes
 
 
 /**
@@ -14,7 +19,7 @@ function showToast(title, message, type = "success", duration = 2500) {
     const toast = document.createElement("div");
     toast.className = `toast toast-${type}`;
 
-    const iconSvg = type === "success" 
+    const iconSvg = type === "success"
         ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
              <polyline points="20 6 9 17 4 12"></polyline>
            </svg>`
@@ -102,6 +107,10 @@ async function addTask() {
         if (btnText) btnText.textContent = "جاري الإضافة...";
     }
 
+    const userStr = localStorage.getItem("auth_user");
+    const currentUser = userStr ? JSON.parse(userStr) : {};
+    const authenticatedUserId = currentUser.userId || currentUser.id || "";
+
     const todayDate = new Date().toISOString().split("T")[0];
     // 3. إرسال البيانات
     axios
@@ -114,32 +123,35 @@ async function addTask() {
                 priority: priority,
                 duration: duration,
                 status: "قيد الانتظار",
+                userEmail: currentUser.email || "",
+                userName: currentUser.name || "",
+                userId: authenticatedUserId,
+                "user ID": authenticatedUserId,
+                userRole: currentUser.role || "member"
             }
-            
-            
         })
         .then(function (response) {
-            console.log("Response:", response.data);
             const data = response.data;
+            console.log("Add Task Server Response:", data);
+            // التحقق الدقيق من نجاح العملية من السيرفر
+            const isSuccess = data && (data.success === true || data.process === "done" || data.status === "success");
 
-                // التحقق من أن الاستجابة ليست فارغة وترجع process: done
-            if (data ==="done") {
-                showToast("فشلت الإضافة", "لم يتم استلام تأكيد المعالجة من السيرفر (لم يرجع process: done).", "error", 3500);
-                return;
+            if (isSuccess) {
+                showToast("تمت الإضافة بنجاح!", data.message || "تم حفظ المهمة الجديدة في قاعدة البيانات بنجاح.", "success", 2000);
+                // إعادة تحميل الصفحة بعد اكتمال عرض التنبيه
+                setTimeout(() => {
+                    window.location.href = "../todo.html";
+                }, 1000);
             } else {
-                showToast("تمت الإضافة بنجاح!", "تم حفظ المهمة الجديدة في قاعدة البيانات بنجاح.", "success", 2000);
-            
-          
-        }
-        
-            // إعادة تحميل الصفحة بعد اكتمال عرض التنبيه
-          setTimeout(() => {
-              location.reload();
-          }, 1800);
+                const errorMsg = data?.message || data?.error?.message || "فشلت عملية إضافة المهمة في قاعدة البيانات.";
+                console.error("Add Task Error Response:", data);
+                showToast("فشلت الإضافة", errorMsg, "error", 4000);
+            }
         })
         .catch((error) => {
-            console.error("Error:", error);
-            showToast("فشل في الإرسال", "تعذر الاتصال بالسيرفر، تأكد من تشغيل الخدمة.", "error");
+            console.error("Add Task Network/Server Error:", error);
+            const serverMsg = error.response?.data?.message || error.response?.data?.error?.message || "تعذر الاتصال بالسيرفر، تأكد من تشغيل الخدمة وصحة البيانات.";
+            showToast("فشل في الإرسال", serverMsg, "error", 4000);
         })
         .finally(() => {
             // 4. إيقاف تأثير التحميل وإعادة الزر لحالته الأصلية

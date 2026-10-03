@@ -10,10 +10,12 @@
  * Auth:     Public or Local Webhook
  */
 
-const UrlGetTest = "https://n8n-production-4941.up.railway.app/webhook-test/Get-database";
-const UrlGet = "https://n8n-production-4941.up.railway.app/webhook/Get-database";
-const UrlPostTest = "https://n8n-production-4941.up.railway.app/webhook-test/post-database";
-const UrlPost = "https://n8n-production-4941.up.railway.app/webhook/post-database";
+
+const UrlGetTest = "https://n8n-production-c217.up.railway.app/webhook-test/Get-database";
+const UrlGet = "https://n8n-production-c217.up.railway.app/webhook/Get-database";
+const UrlPostTest = "https://n8n-production-c217.up.railway.app/webhook-test/post-database";
+const UrlPost = "https://n8n-production-c217.up.railway.app/webhook/post-database";
+
 
 /**
  * Formats today's date in YYYY-MM-DD format for comparisons and API parameters.
@@ -611,6 +613,10 @@ function revertCardToPreviousStatus(cardElement, previousStatus) {
  * Follows canonical Axios promise chaining (.then, .catch, .finally).
  */
 function updateTaskStatus(taskId, statusKey, cardElement, previousStatus) {
+    const userStr = localStorage.getItem("auth_user");
+    const currentUser = userStr ? JSON.parse(userStr) : {};
+    const authenticatedUserId = currentUser.userId || currentUser.id || "";
+
     const statusArabicMap = {
         pending: "قيد الانتظار",
         progress: "قيد التنفيذ",
@@ -634,32 +640,26 @@ function updateTaskStatus(taskId, statusKey, cardElement, previousStatus) {
             status: newStatusArabic,
             status_text: newStatusNotion,
             statusKey: statusKey,
+            userId: authenticatedUserId,
+            "user ID": authenticatedUserId,
             updated_at: new Date().toISOString(),
         })
         .then(function (response) {
-            console.log("Status update response:", response.data);
-
             const data = response.data;
-            const hasDoneProcess = data === "done"
+            const isSuccess = data && (data.success === true || data.process === "done" || data.status === "success");
 
-            // Check if response is empty or does not return process: done
-            if (hasDoneProcess) {
-                showToast(
-                    "فشل التحديث",
-                    "لم يتم تأكيد العملية من السيرفر (لم يرجع process: done).",
-                    "error",
-                    3500
-                );
+            if (isSuccess) {
+                showToast("تم تحديث الحالة", `تم نقل المهمة إلى "${newStatusArabic}" وتحديثها بنجاح.`, "success", 2000);
+            } else {
+                const errorMsg = data?.message || data?.error?.message || "لم يتم تأكيد العملية من السيرفر.";
+                showToast("فشل التحديث", errorMsg, "error", 3500);
                 revertCardToPreviousStatus(cardElement, previousStatus);
-                return;
-            } else {    
-
-            showToast("تم تحديث الحالة", `تم نقل المهمة إلى "${newStatusArabic}" وتحديثها بنجاح.`, "success", 2000);
             }
         })
         .catch(function (error) {
             console.error("Error updating task status:", error);
-            showToast("خطأ في التحديث", "تعذر حفظ تغيير الحالة في السيرفر، يرجى التحقق من الاتصال.", "error");
+            const serverMsg = error.response?.data?.message || error.response?.data?.error?.message || "تعذر حفظ تغيير الحالة في السيرفر، يرجى التحقق من الاتصال.";
+            showToast("خطأ في التحديث", serverMsg, "error");
             revertCardToPreviousStatus(cardElement, previousStatus);
         })
         .finally(function () {
@@ -807,11 +807,19 @@ function GetTasks() {
         `;
     }
 
+    const userStr = localStorage.getItem("auth_user");
+    const currentUser = userStr ? JSON.parse(userStr) : {};
+    const authenticatedUserId = currentUser.userId || currentUser.id || "";
+    const userEmail = currentUser.email || "";
+
     axios
         .get(UrlGet, {
             params: {
                 Get: "get_all_tasks",
                 date: todayFormattedDate,
+                userId: authenticatedUserId,
+                "user ID": authenticatedUserId,
+                userEmail: userEmail,
             },
         })
         .then(function (response) {
@@ -877,8 +885,18 @@ function GetTasks() {
         });
 }
 
-// Automatically update today badge, initialize drag-and-drop, and fetch tasks on page load
+// Automatically check authentication, update today badge, initialize drag-and-drop, and fetch tasks on page load/refresh
 document.addEventListener("DOMContentLoaded", () => {
+    // 1. Check LocalStorage on Every Refresh / Load
+    const authUser = localStorage.getItem("auth_user");
+
+    if (!authUser) {
+        // User is not signed in -> Redirect to Sign In page
+        window.location.href = "auth.html";
+        return;
+    }
+
+    // 2. User is signed in -> Continue loading the Board
     const dateBadge = document.getElementById("today-date-badge");
     if (dateBadge) {
         dateBadge.textContent = `مهام اليوم: ${getTodayArabicString()}`;

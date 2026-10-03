@@ -1,0 +1,508 @@
+{
+  "name": "Daily Tracking - Authentication Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Auth-database",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "178eb304-5c86-45d2-b6b7-e032e003e751",
+      "name": "Auth Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -496,
+        208
+      ],
+      "webhookId": "Auth-database"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body?.POST || $json.body?.Get || $json.query?.Get || $json.POST || $json.Get || '' }}",
+                    "rightValue": "Sign Up",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "7670d7ef-8ee3-45a1-a2e0-8b38ef8cbc78"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Sign Up Section"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body?.POST || $json.body?.Get || $json.query?.Get || $json.POST || $json.Get || '' }}",
+                    "rightValue": "Sign In",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "ce78a0bd-72e9-4d1e-a0a6-92a6d7a52515"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Sign In Section"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body?.POST || $json.body?.Get || $json.query?.Get || $json.POST || $json.Get || '' }}",
+                    "rightValue": "Verify",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "95c9541f-db48-4e58-a0b4-ebe00fb6b198"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Verify Session Section"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "c3bf8a80-84ef-4157-8e82-b65e44ccc813",
+      "name": "Auth Section Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -256,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Extract payload\nconst body = $json.body || $json;\nconst data = body.data || body;\n\n// 2. Validate mandatory registration fields\nconst name = String(data.name || '').trim();\nconst email = String(data.email || '').trim().toLowerCase();\nconst password = String(data.password || '').trim();\n\nif (!name) {\n  throw new Error('Name is required');\n}\nif (!email || !email.includes('@')) {\n  throw new Error('Valid email is required');\n}\nif (!password || password.length < 8) {\n  throw new Error('Password must be at least 8 characters');\n}\n\n// 3. Normalize role\nconst roleMap = {\n  admin: 'Admin',\n  lead: 'Lead',\n  member: 'Member',\n  Admin: 'Admin',\n  Lead: 'Lead',\n  Member: 'Member'\n};\nconst role = roleMap[data.role] || 'Member';\nconst userId = data.userId || 'usr_' + Math.random().toString(36).substring(2, 11);\n\nreturn {\n  json: {\n    databaseId: '3dc6fd16-45b0-80ff-8435-c255ed191886',\n    name: name,\n    email: email,\n    password: password,\n    role: role,\n    status: 'Active',\n    userId: userId,\n    createdAt: new Date().toISOString()\n  }\n};"
+      },
+      "id": "ab7e2684-4843-4be0-b493-d0d70b4ccf85",
+      "name": "Validate and Prepare Sign Up",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "3dc6fd16-45b0-80ff-8435-c255ed191886",
+          "mode": "list",
+          "cachedResultName": "Users",
+          "cachedResultUrl": "https://app.notion.com/p/3dc6fd1645b080ff8435c255ed191886"
+        },
+        "title": "={{ $json.name }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Email|email",
+              "emailValue": "={{ $json.email }}"
+            },
+            {
+              "key": "Password|rich_text",
+              "textContent": "={{ $json.password }}"
+            },
+            {
+              "key": "User ID|rich_text",
+              "textContent": "={{ $json.userId }}"
+            },
+            {
+              "key": "Role|select",
+              "selectValue": "={{ $json.role }}"
+            },
+            {
+              "key": "Status|select",
+              "selectValue": "={{ $json.status }}"
+            },
+            {
+              "key": "Last Login|date",
+              "date": "={{ $today }}",
+              "timezone": "Asia/Amman"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f1342cb8-edbd-4f59-890a-4b3314ef1be9",
+      "name": "Create User in Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        0
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "0TCcf4zTvlMZvqe6",
+          "name": "fromdarknesstolight2026@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"process\": \"done\",\n  \"status\": \"success\",\n  \"message\": \"User registered successfully\",\n  \"token\": \"token_{{ Date.now() }}\",\n  \"user\": {\n    \"id\": \"{{ $('Validate and Prepare Sign Up').item.json.userId }}\",\n    \"name\": \"{{ $('Validate and Prepare Sign Up').item.json.name }}\",\n    \"email\": \"{{ $('Validate and Prepare Sign Up').item.json.email }}\",\n    \"role\": \"{{ $('Validate and Prepare Sign Up').item.json.role }}\",\n    \"status\": \"Active\"\n  }\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "f41f84d6-f13c-4200-a8e8-5c076293d610",
+      "name": "Respond to Sign Up",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Extract payload\nconst body = $json.body || $json;\nconst data = body.data || body;\n\nconst email = String(data.email || '').trim().toLowerCase();\nconst password = String(data.password || '').trim();\n\nif (!email) {\n  throw new Error('Email is required');\n}\nif (!password) {\n  throw new Error('Password is required');\n}\n\nreturn {\n  json: {\n    databaseId: '3dc6fd16-45b0-80ff-8435-c255ed191886',\n    email: email,\n    password: password,\n    rememberMe: Boolean(data.rememberMe)\n  }\n};"
+      },
+      "id": "b35fef76-0c7d-4f24-9c03-5a0e7a4f4ee8",
+      "name": "Validate and Prepare Sign In",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "3dc6fd16-45b0-80ff-8435-c255ed191886",
+          "mode": "list",
+          "cachedResultName": "Users",
+          "cachedResultUrl": "https://app.notion.com/p/3dc6fd1645b080ff8435c255ed191886"
+        },
+        "filterType": "manual",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "key": "Email|email",
+              "condition": "equals",
+              "emailValue": "={{ $json.email }}"
+            },
+            {
+              "key": "Password|rich_text",
+              "condition": "equals",
+              "richTextValue": "={{ $('Auth Webhook').item.json.body.data.password }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "af5e7dfd-b3bb-4d90-986c-8d7f4ad75d94",
+      "name": "Find User in Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        208
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "notionApi": {
+          "id": "0TCcf4zTvlMZvqe6",
+          "name": "fromdarknesstolight2026@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Retrieve input credentials and Notion query result\nconst signinData = $('Validate and Prepare Sign In').item.json;\nconst notionUser = $json;\n\n// 2. Extract properties from Notion record\nconst props = notionUser.properties || {};\n\n// تم تصحيح حالة الأحرف (حروف صغيرة) لتتطابق مع مخرجات n8n\nlet storedEmail = props.Email?.email || notionUser.property_email || '';\nlet storedPassword = props.Password?.rich_text?.[0]?.plain_text || notionUser.property_password || '';\nlet storedName = props.Name?.title?.[0]?.plain_text || notionUser.name || notionUser.property_name || '';\nlet storedRole = props.Role?.select?.name || notionUser.property_role || 'Member';\nlet storedStatus = props.Status?.select?.name || notionUser.property_status || 'Active';\nlet storedUserId = props['User ID']?.rich_text?.[0]?.plain_text || notionUser.property_user_id || notionUser.id || '';\n\n// 3. Authenticate\nif (!storedEmail || storedEmail.toLowerCase() !== signinData.email.toLowerCase()) {\n  return {\n    json: {\n      process: 'error',\n      status: 'error',\n      message: 'البريد الإلكتروني غير مسجل، يرجى إنشاء حساب جديد.'\n    }\n  };\n}\n\nif (storedStatus !== 'Active') {\n  return {\n    json: {\n      process: 'error',\n      status: 'error',\n      message: 'الحساب غير مفعّل أو تم إيقافه، يرجى مراجعة إدارة النظام.'\n    }\n  };\n}\n\nif (storedPassword !== signinData.password) {\n  return {\n    json: {\n      process: 'error',\n      status: 'error',\n      message: 'كلمة المرور غير صحيحة، يرجى المحاولة مرة أخرى.'\n    }\n  };\n}\n\n// 4. Authentication success: generate token & payload\nconst token = 'token_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);\n\nreturn {\n  json: {\n    process: 'done',\n    status: 'success',\n    message: 'تم تسجيل الدخول بنجاح',\n    token: token,\n    user: {\n      id: storedUserId,\n      name: storedName,\n      email: storedEmail,\n      role: storedRole,\n      status: storedStatus\n    }\n  }\n};"
+      },
+      "id": "644a0283-4bf2-4a12-b2d9-d33b3a3bfa5f",
+      "name": "Verify Credentials and Build Session",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "54b193d2-422b-4f9b-bedb-9f8e20c93e87",
+      "name": "Respond to Sign In",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Extract session parameters\nconst body = $json.body || $json;\nconst query = $json.query || {};\n\nconst token = body.token || query.token || '';\nconst email = String(body.email || query.email || '').trim().toLowerCase();\n\nif (!token || !email) {\n  throw new Error('Token and email are required for session verification');\n}\n\nreturn {\n  json: {\n    databaseId: '3dc6fd16-45b0-80ff-8435-c255ed191886',\n    token: token,\n    email: email\n  }\n};"
+      },
+      "id": "9c356536-17be-4fcc-80fa-6a1739f02a72",
+      "name": "Validate Verify Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "3dc6fd16-45b0-80ff-8435-c255ed191886",
+          "mode": "id"
+        },
+        "filterType": "manual",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "key": "Email|email",
+              "condition": "equals",
+              "emailValue": "={{ $json.email }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "93b00468-4726-4432-b03d-35ebd2974742",
+      "name": "Verify User in Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        400
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "0TCcf4zTvlMZvqe6",
+          "name": "fromdarknesstolight2026@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Extract verified Notion record\nconst notionUser = $json;\nconst props = notionUser.properties || {};\n\nlet storedEmail = props.Email?.email || notionUser.property_Email || '';\nlet storedName = props.Name?.title?.[0]?.plain_text || notionUser.property_Name || '';\nlet storedRole = props.Role?.select?.name || notionUser.property_Role || 'Member';\nlet storedStatus = props.Status?.select?.name || notionUser.property_Status || 'Active';\nlet storedUserId = props['User ID']?.rich_text?.[0]?.plain_text || notionUser['property_User ID'] || '';\n\nif (!storedEmail || storedStatus !== 'Active') {\n  return {\n    json: {\n      process: 'error',\n      valid: false,\n      message: 'الجلسة غير صالحة أو الحساب غير مفعّل.'\n    }\n  };\n}\n\nreturn {\n  json: {\n    process: 'done',\n    valid: true,\n    status: 'success',\n    user: {\n      id: storedUserId,\n      name: storedName,\n      email: storedEmail,\n      role: storedRole,\n      status: storedStatus\n    }\n  }\n};"
+      },
+      "id": "478df835-62c0-4773-b911-0669f8b35343",
+      "name": "Format Session Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "6b72c363-61a3-4e3f-9b97-b4a4ab142089",
+      "name": "Respond to Verify Session",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        400
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Auth Webhook": {
+      "main": [
+        [
+          {
+            "node": "Auth Section Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auth Section Switch": {
+      "main": [
+        [
+          {
+            "node": "Validate and Prepare Sign Up",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validate and Prepare Sign In",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validate Verify Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate and Prepare Sign Up": {
+      "main": [
+        [
+          {
+            "node": "Create User in Notion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create User in Notion": {
+      "main": [
+        [
+          {
+            "node": "Respond to Sign Up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate and Prepare Sign In": {
+      "main": [
+        [
+          {
+            "node": "Find User in Notion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find User in Notion": {
+      "main": [
+        [
+          {
+            "node": "Verify Credentials and Build Session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Credentials and Build Session": {
+      "main": [
+        [
+          {
+            "node": "Respond to Sign In",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Verify Request": {
+      "main": [
+        [
+          {
+            "node": "Verify User in Notion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify User in Notion": {
+      "main": [
+        [
+          {
+            "node": "Format Session Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Session Output": {
+      "main": [
+        [
+          {
+            "node": "Respond to Verify Session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "52858f4b-3a6d-4786-a225-5ee3814903c5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "74d03d59c9d7d0a463e6faecb6b66c601f743f91742a92cf73bf71edf0b4efde"
+  },
+  "nodeGroups": [],
+  "id": "s0qWywBZoACYn5Ed",
+  "tags": []
+}

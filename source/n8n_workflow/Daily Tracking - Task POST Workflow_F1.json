@@ -1,0 +1,751 @@
+{
+  "name": "Daily Tracking - Task POST Workflow_F1",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "post-database",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "e224af2c-6de9-4e0c-b686-278f5b507deb",
+      "name": "POST Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1808,
+        2560
+      ],
+      "webhookId": "post-database"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body?.POST || $json.POST || '' }}",
+                    "rightValue": "Add",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "45081afc-fcf4-4068-a848-0ef930d3d159"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Add Task Section"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body?.POST || $json.POST || '' }}",
+                    "rightValue": "Update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "fc64f423-0d8e-49ee-adbb-eb7088cd813f"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Update Status Section"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "9fd6856f-2dc7-4d76-adf6-7f9c8bf9726f",
+      "name": "Section Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1584,
+        2544
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Extract request payload\nconst body = $json.body || $json;\nconst data = body.data || body;\n\n// 2. Validate mandatory fields\nconst title = String(data.title || '').trim();\nconst description = String(data.description || '').trim();\nconst authenticatedUserId = String(data.userId || data['user ID'] || data.id || '').trim();\nconst userEmail = String(data.userEmail || data.email || '').trim().toLowerCase();\n\nif (!title) {\n  return {\n    json: {\n      isError: true,\n      statusCode: 400,\n      error: {\n        message: 'عنوان المهمة مطلوب',\n        code: 'MISSING_TITLE',\n        field: 'title'\n      }\n    }\n  };\n}\n\nif (!description) {\n  return {\n    json: {\n      isError: true,\n      statusCode: 400,\n      error: {\n        message: 'وصف المهمة مطلوب',\n        code: 'MISSING_DESCRIPTION',\n        field: 'description'\n      }\n    }\n  };\n}\n\nif (!authenticatedUserId && !userEmail) {\n  return {\n    json: {\n      isError: true,\n      statusCode: 401,\n      error: {\n        message: 'معرف المستخدم غير موجود، يرجى تسجيل الدخول أولاً',\n        code: 'UNAUTHENTICATED_USER',\n        field: 'user ID'\n      }\n    }\n  };\n}\n\n// 3. Normalization maps for Notion schema\nconst categoryMap = {\n  religious: 'دينية',\n  body: 'جسم',\n  work: 'شغل',\n  study: 'دراسة',\n  'دينية': 'دينية',\n  'جسم': 'جسم',\n  'شغل': 'شغل',\n  'دراسة': 'دراسة'\n};\n\nconst priorityMap = {\n  important: 'مهمة',\n  normal: 'عادية',\n  high: 'مهمة',\n  urgent: 'مهمة',\n  'مهمة': 'مهمة',\n  'عادية': 'عادية'\n};\n\nconst durationMap = {\n  under_hour: 'أقل من ساعة',\n  one_hour: 'ساعة',\n  two_hours: 'ساعتان',\n  'أقل من ساعة': 'أقل من ساعة',\n  'ساعة': 'ساعة',\n  'ساعتان': 'ساعتان'\n};\n\nconst today = new Date().toISOString().split('T')[0];\nconst category = categoryMap[data.category] || data.category || 'شغل';\nconst priority = priorityMap[data.priority] || data.priority || 'عادية';\nconst duration = durationMap[data.duration] || data.duration || 'أقل من ساعة';\nconst status = data.status || 'قيد الانتظار';\nconst date = data.date || today;\n\nreturn {\n  json: {\n    isError: false,\n    databaseId: '3dc6fd16-45b0-8072-9e75-fb87ba35ed28',\n    title: title,\n    description: description,\n    category: category,\n    priority: priority,\n    duration: duration,\n    status: status,\n    date: date,\n    userId: authenticatedUserId,\n    'user ID': authenticatedUserId,\n    userEmail: userEmail,\n    userName: data.userName || data.name || '',\n    userRole: data.userRole || data.role || 'member'\n  }\n};"
+      },
+      "id": "80286450-9873-4be5-8941-09d111dd75cb",
+      "name": "Validate and Prepare Add Task",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1360,
+        2112
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "add-valid-check",
+              "leftValue": "={{ $json.isError }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b875e9d1-0bbe-4725-8354-d2248eada378",
+      "name": "Check Add Validation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1136,
+        2112
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "3dc6fd16-45b0-80ff-8435-c255ed191886",
+          "mode": "id"
+        },
+        "filterType": "manual",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "key": "Email|email",
+              "condition": "equals",
+              "emailValue": "={{ $json.userEmail }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "141c9906-a0a8-42e5-8b10-a022f622eaab",
+      "name": "Find Authenticated User in Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        -912,
+        2032
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "notionApi": {
+          "id": "0TCcf4zTvlMZvqe6",
+          "name": "fromdarknesstolight2026@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Generate unique Task ID via JavaScript\nconst timestamp = Date.now();\nconst randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();\nconst generatedTaskId = `TASK-${timestamp}-${randomPart}`;\n\n// 2. Retrieve user and task context\nconst inputUserRecord = $input.first()?.json || {};\nconst taskContext = $('Validate and Prepare Add Task').first().json;\nconst userPageId = inputUserRecord.id || '';\n\nreturn {\n  json: {\n    ...taskContext,\n    userPageId: userPageId,\n    'user ID': taskContext.userId,\n    userId: taskContext.userId,\n    ID_task: generatedTaskId\n  }\n};"
+      },
+      "id": "17d3b938-08f3-47da-8be2-49e04139404d",
+      "name": "Generate ID_task",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -688,
+        2032
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "3dc6fd16-45b0-8072-9e75-fb87ba35ed28",
+          "mode": "id"
+        },
+        "filterType": "manual",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "key": "ID_task|rich_text",
+              "condition": "equals",
+              "richTextValue": "={{ $json.ID_task }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "00a71e25-5a1f-451e-b0fe-81d6070ad617",
+      "name": "Check Task ID Uniqueness",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        -464,
+        1968
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "notionApi": {
+          "id": "0TCcf4zTvlMZvqe6",
+          "name": "fromdarknesstolight2026@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "3dc6fd16-45b0-8072-9e75-fb87ba35ed28",
+          "mode": "id"
+        },
+        "title": "={{ $('Generate ID_task').item.json.title }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "الوصف|rich_text",
+              "textContent": "={{ $('Generate ID_task').item.json.description }}"
+            },
+            {
+              "key": "الحالة|select",
+              "selectValue": "={{ $('Generate ID_task').item.json.status }}"
+            },
+            {
+              "key": "الأهمية|select",
+              "selectValue": "={{ $('Generate ID_task').item.json.priority }}"
+            },
+            {
+              "key": "التصنيف|select",
+              "selectValue": "={{ $('Generate ID_task').item.json.category }}"
+            },
+            {
+              "key": "date|date",
+              "date": "={{ $('Generate ID_task').item.json.date }}"
+            },
+            {
+              "key": "الوقت المتوقع|select",
+              "selectValue": "={{ $('Generate ID_task').item.json.duration }}"
+            },
+            {
+              "key": "ID_task|rich_text",
+              "textContent": "={{ $('Generate ID_task').item.json.ID_task }}"
+            },
+            {
+              "key": "User_ID|rich_text",
+              "textContent": "={{ $('POST Webhook').item.json.body.data['user ID'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b3e22acf-9e97-4ed5-914d-2e29b862272b",
+      "name": "Create Task in Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        2032
+      ],
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "notionApi": {
+          "id": "0TCcf4zTvlMZvqe6",
+          "name": "fromdarknesstolight2026@gmail.com"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"process\": \"done\",\n  \"status\": \"success\",\n  \"message\": \"تمت إضافة المهمة بنجاح إلى قاعدة البيانات\",\n  \"id\": \"{{ $json.id || '' }}\",\n  \"ID_task\": \"{{ $('Generate ID_task').item.json.ID_task }}\",\n  \"user ID\": \"{{ $('Generate ID_task').item.json['user ID'] }}\",\n  \"task\": {\n    \"ID_task\": \"{{ $('Generate ID_task').item.json.ID_task }}\",\n    \"user ID\": \"{{ $('Generate ID_task').item.json['user ID'] }}\",\n    \"title\": \"{{ $('Generate ID_task').item.json.title }}\",\n    \"status\": \"{{ $('Generate ID_task').item.json.status }}\",\n    \"category\": \"{{ $('Generate ID_task').item.json.category }}\",\n    \"priority\": \"{{ $('Generate ID_task').item.json.priority }}\",\n    \"date\": \"{{ $('Generate ID_task').item.json.date }}\"\n  }\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "92b1f059-387c-40a9-a980-a5ab03d7eb87",
+      "name": "Respond to Add Task",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        432,
+        1936
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract Notion or general execution error\nconst errorData = $json.error || $json;\n\nreturn {\n  json: {\n    isError: true,\n    statusCode: 500,\n    error: {\n      operation: 'add_task',\n      message: errorData.message || 'فشل حفظ المهمة في Notion، يرجى التحقق من الاتصال',\n      details: errorData.description || errorData.name || 'Notion API failure'\n    }\n  }\n};"
+      },
+      "id": "07f97f87-b39c-4cf8-a4d0-7bf59dd03805",
+      "name": "Capture Add Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        2128
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Extract payload\nconst body = $json.body || $json;\n\n// 2. Resolve Page ID / Task ID\nconst pageId = body.taskId || body.id || body.data?.taskId || body.data?.id;\nconst rawStatus = body.status || body.status_text || body.data?.status || '';\n\nif (!pageId) {\n  return {\n    json: {\n      isError: true,\n      statusCode: 400,\n      error: {\n        message: 'معرف المهمة (Task ID) مطلوب لتحديث الحالة',\n        code: 'MISSING_TASK_ID',\n        field: 'taskId'\n      }\n    }\n  };\n}\n\n// 3. Normalization to Arabic Notion status\nconst statusMap = {\n  pending: 'قيد الانتظار',\n  progress: 'قيد التنفيذ',\n  completed: 'مكتملة',\n  'not started': 'قيد الانتظار',\n  'in progress': 'قيد التنفيذ',\n  done: 'مكتملة',\n  'قيد الانتظار': 'قيد الانتظار',\n  'قيد التنفيذ': 'قيد التنفيذ',\n  'مكتملة': 'مكتملة'\n};\n\nconst normalizedStatus = statusMap[String(rawStatus).toLowerCase()] || rawStatus || 'قيد الانتظار';\n\nreturn {\n  json: {\n    isError: false,\n    databaseId: '3dc6fd16-45b0-8072-9e75-fb87ba35ed28',\n    pageId: pageId,\n    taskId: pageId,\n    status: normalizedStatus,\n    statusKey: body.statusKey || 'pending',\n    updatedAt: body.updated_at || new Date().toISOString()\n  }\n};"
+      },
+      "id": "6966061c-7a2e-436d-94f7-4108b1f87886",
+      "name": "Validate and Prepare Update Task",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        2560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "update-valid-check",
+              "leftValue": "={{ $json.isError }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "eaa1361b-e5f6-4886-be39-c89d28e65aee",
+      "name": "Check Update Validation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -16,
+        2560
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $json.pageId }}",
+          "mode": "id"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "الحالة|select",
+              "selectValue": "={{ $json.status }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ce0fa556-e2b6-45ea-8bca-e17815847bce",
+      "name": "Update Task Status in Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        2640
+      ],
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "notionApi": {
+          "id": "0TCcf4zTvlMZvqe6",
+          "name": "fromdarknesstolight2026@gmail.com"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"process\": \"done\",\n  \"status\": \"success\",\n  \"message\": \"تم تحديث حالة المهمة بنجاح في Notion\",\n  \"id\": \"{{ $json.id || $('Validate and Prepare Update Task').item.json.pageId }}\",\n  \"status\": \"{{ $('Validate and Prepare Update Task').item.json.status }}\",\n  \"updatedAt\": \"{{ $('Validate and Prepare Update Task').item.json.updatedAt }}\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "e8d8848b-5368-4c7d-81e7-ebb7a9c481ba",
+      "name": "Respond to Update Task",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        432,
+        2544
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const errorData = $json.error || $json;\n\nreturn {\n  json: {\n    isError: true,\n    statusCode: 500,\n    error: {\n      operation: 'update_task_status',\n      message: errorData.message || 'فشل تحديث حالة المهمة في Notion',\n      details: errorData.description || errorData.name || 'Notion API failure'\n    }\n  }\n};"
+      },
+      "id": "b4bda0b4-1fb5-47d0-9fc2-e0d682f39a4e",
+      "name": "Capture Update Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        2736
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  json: {\n    isError: true,\n    statusCode: 400,\n    error: {\n      operation: 'router',\n      message: 'إجراء غير معروف في الطلب (يرجى تحديد Add a new task أو Update task status)',\n      code: 'UNKNOWN_ACTION'\n    }\n  }\n};"
+      },
+      "id": "0b6e7fad-06ac-4c39-9071-d7644bffe86f",
+      "name": "Capture Route Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        2928
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": false,\n  \"process\": \"error\",\n  \"status\": \"error\",\n  \"message\": \"{{ $json.error?.message || 'حدث خطأ أثناء معالجة الطلب' }}\",\n  \"error\": {\n    \"code\": \"{{ $json.error?.code || 'OPERATION_FAILED' }}\",\n    \"message\": \"{{ $json.error?.message || 'حدث خطأ أثناء معالجة الطلب' }}\",\n    \"operation\": \"{{ $json.error?.operation || 'post_operation' }}\",\n    \"details\": \"{{ $json.error?.details || '' }}\"\n  }\n}",
+        "options": {
+          "responseCode": "={{ $json.statusCode || 400 }}"
+        }
+      },
+      "id": "5c50cc85-413c-464e-844c-1c7ba168995e",
+      "name": "Respond with Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        656,
+        2400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n// التحقق مما إذا كانت المدخلات فارغة تماماً أو تحتوي على عنصر فارغ (يحدث عند تفعيل Always Output Data)\nconst isEmpty = items.length === 0 || (items.length === 1 && Object.keys(items[0].json).length === 0);\n\nif (isEmpty) {\n  // لا يوجد بيانات (المعرف غير مكرر)\n  return [{ json: { result: \"Done\" } }];\n} else {\n  // يوجد بيانات (كما في الصورة، المعرف مكرر)\n  return [{ json: { result: false } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        1968
+      ],
+      "id": "f57eafb0-c5fc-4d25-8d54-57ddc239563d",
+      "name": "make the result"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "761159d6-1b7b-4fd7-a862-0e48a85d0fd0",
+              "leftValue": "={{ $json.result }}",
+              "rightValue": "Done",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -16,
+        2032
+      ],
+      "id": "0a5209a3-ad5d-480c-8195-cf92fe510ef2",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "POST Webhook": {
+      "main": [
+        [
+          {
+            "node": "Section Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Section Switch": {
+      "main": [
+        [
+          {
+            "node": "Validate and Prepare Add Task",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validate and Prepare Update Task",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Capture Route Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate and Prepare Add Task": {
+      "main": [
+        [
+          {
+            "node": "Check Add Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Add Validation": {
+      "main": [
+        [
+          {
+            "node": "Find Authenticated User in Notion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond with Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Authenticated User in Notion": {
+      "main": [
+        [
+          {
+            "node": "Generate ID_task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate ID_task": {
+      "main": [
+        [
+          {
+            "node": "Check Task ID Uniqueness",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Task ID Uniqueness": {
+      "main": [
+        [
+          {
+            "node": "make the result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Task in Notion": {
+      "main": [
+        [
+          {
+            "node": "Respond to Add Task",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Capture Add Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture Add Error": {
+      "main": [
+        [
+          {
+            "node": "Respond with Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate and Prepare Update Task": {
+      "main": [
+        [
+          {
+            "node": "Check Update Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Update Validation": {
+      "main": [
+        [
+          {
+            "node": "Update Task Status in Notion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond with Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Task Status in Notion": {
+      "main": [
+        [
+          {
+            "node": "Respond to Update Task",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Capture Update Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture Update Error": {
+      "main": [
+        [
+          {
+            "node": "Respond with Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture Route Error": {
+      "main": [
+        [
+          {
+            "node": "Respond with Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "make the result": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create Task in Notion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate ID_task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "82bec27a-cd5b-4873-8c5c-985a67165670",
+  "meta": {
+    "instanceId": "74d03d59c9d7d0a463e6faecb6b66c601f743f91742a92cf73bf71edf0b4efde"
+  },
+  "nodeGroups": [],
+  "id": "hZ50QU2WIHRjHcZA",
+  "tags": []
+}
