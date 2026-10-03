@@ -1,12 +1,9 @@
 
 
-<<<<<<< Updated upstream
-let UrlPostTest = "https://n8n-production-4941.up.railway.app/webhook-test/post-database"
-let UrlPost = "https://n8n-production-4941.up.railway.app/webhook/post-database"
-=======
+
 let UrlPostTest = "https://n8n-production-c217.up.railway.app/webhook-test/post-database";
 let UrlPost = "https://n8n-production-c217.up.railway.app/webhook/post-database";
->>>>>>> Stashed changes
+
 
 
 /**
