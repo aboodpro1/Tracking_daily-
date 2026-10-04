@@ -137,7 +137,7 @@ async function addTask() {
                 showToast("تمت الإضافة بنجاح!", data.message || "تم حفظ المهمة الجديدة في قاعدة البيانات بنجاح.", "success", 2000);
                 // إعادة تحميل الصفحة بعد اكتمال عرض التنبيه
                 setTimeout(() => {
-                    window.location.href = "../todo.html";
+                    window.location.href = "https://aboodpro1.github.io/Tracking_daily-/todo.html";
                 }, 1000);
             } else {
                 const errorMsg = data?.message || data?.error?.message || "فشلت عملية إضافة المهمة في قاعدة البيانات.";
