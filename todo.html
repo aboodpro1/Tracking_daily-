@@ -300,6 +300,150 @@
             </div>
         </main>
     </div>
+
+    <!-- Task Details Modal (Centered Card with Blurred Backdrop) -->
+    <div id="task-details-modal-overlay" class="task-details-modal-overlay" aria-hidden="true">
+        <div class="task-details-modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-task-title">
+            <!-- Modal Top Navigation Bar -->
+            <div class="modal-header">
+                <div class="modal-header-badges" id="modal-header-badges">
+                    <!-- Badges populated dynamically -->
+                </div>
+                <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="إغلاق النافذة" title="إغلاق النافذة">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Details Section at Top -->
+            <div class="modal-details-top">
+                <div class="modal-section-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <span>تفاصيل المهمة</span>
+                </div>
+                <h2 class="modal-task-title" id="modal-task-title">عنوان المهمة</h2>
+            </div>
+
+            <!-- Modal Body Content -->
+            <div class="modal-body">
+                <!-- Description Field -->
+                <div class="modal-field-group">
+                    <label class="modal-field-label">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="21" y1="10" x2="3" y2="10"></line>
+                            <line x1="21" y1="6" x2="3" y2="6"></line>
+                            <line x1="21" y1="14" x2="3" y2="14"></line>
+                            <line x1="21" y1="18" x2="7" y2="18"></line>
+                        </svg>
+                        <span>الوصف</span>
+                    </label>
+                    <div class="modal-description-box" id="modal-task-description">
+                        لا يوجد وصف لهذه المهمة.
+                    </div>
+                </div>
+
+                <!-- Database Fields Grid -->
+                <div class="modal-grid-fields">
+                    <!-- Status -->
+                    <div class="modal-grid-item">
+                        <span class="grid-item-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span>الحالة</span>
+                        </span>
+                        <span class="grid-item-value" id="modal-task-status">-</span>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="modal-grid-item">
+                        <span class="grid-item-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                            </svg>
+                            <span>التصنيف</span>
+                        </span>
+                        <span class="grid-item-value" id="modal-task-category">-</span>
+                    </div>
+
+                    <!-- Priority -->
+                    <div class="modal-grid-item">
+                        <span class="grid-item-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                            <span>الأهمية</span>
+                        </span>
+                        <span class="grid-item-value" id="modal-task-priority">-</span>
+                    </div>
+
+                    <!-- Duration -->
+                    <div class="modal-grid-item">
+                        <span class="grid-item-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span>الوقت المتوقع</span>
+                        </span>
+                        <span class="grid-item-value" id="modal-task-duration">-</span>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="modal-grid-item">
+                        <span class="grid-item-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <span>تاريخ المهمة</span>
+                        </span>
+                        <span class="grid-item-value" id="modal-task-date">-</span>
+                    </div>
+
+                    <!-- Task ID -->
+                    <div class="modal-grid-item">
+                        <span class="grid-item-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="4" y1="9" x2="20" y2="9"></line>
+                                <line x1="4" y1="15" x2="20" y2="15"></line>
+                                <line x1="10" y1="3" x2="8" y2="21"></line>
+                                <line x1="16" y1="3" x2="14" y2="21"></line>
+                            </svg>
+                            <span>معرف المهمة</span>
+                        </span>
+                        <span class="grid-item-value modal-id-badge" id="modal-task-id">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer with Delete Task button at bottom-left -->
+            <div class="modal-footer">
+                <button type="button" class="btn-modal-delete" id="modal-delete-btn" aria-label="حذف المهمة">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                    <span>حذف المهمة</span>
+                </button>
+                <button type="button" class="btn-modal-close" id="modal-dismiss-btn">
+                    <span>إغلاق</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

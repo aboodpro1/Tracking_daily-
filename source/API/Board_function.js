@@ -407,6 +407,7 @@ function parseTasksResponse(responseData) {
 
         return {
             id,
+            ID_task: item.property_id_task || item.ID_task || item.property_ID_task || id,
             title: title || "مهمة بدون عنوان",
             description,
             status,
@@ -414,12 +415,15 @@ function parseTasksResponse(responseData) {
             priority,
             duration,
             date,
+            userId: item.userId || item["user ID"] || item.user_id || "",
+            userEmail: item.userEmail || item.email || "",
+            rawItem: item,
         };
     });
 }
 
 /**
- * Builds the interactive Task Card DOM element.
+ * Builds the interactive Task Card DOM element with View Details Eye action.
  */
 function createTaskCardElement(task, statusKey) {
     const card = document.createElement("div");
@@ -452,26 +456,44 @@ function createTaskCardElement(task, statusKey) {
                 </svg>
                 <span>${escapeHtml(durationText)}</span>
             </span>
-            ${isCompleted ? `
-                <span class="completed-check-badge" title="مكتملة">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
+            <div class="card-actions-group">
+                <button type="button" class="btn-card-details" title="عرض تفاصيل المهمة" aria-label="عرض تفاصيل المهمة">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
                     </svg>
-                </span>
-            ` : `
-                <span class="drag-handle" aria-label="اسحب المهمة">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="9" cy="5" r="1"></circle>
-                        <circle cx="9" cy="12" r="1"></circle>
-                        <circle cx="9" cy="19" r="1"></circle>
-                        <circle cx="15" cy="5" r="1"></circle>
-                        <circle cx="15" cy="12" r="1"></circle>
-                        <circle cx="15" cy="19" r="1"></circle>
-                    </svg>
-                </span>
-            `}
+                </button>
+                ${isCompleted ? `
+                    <span class="completed-check-badge" title="مكتملة">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </span>
+                ` : `
+                    <span class="drag-handle" aria-label="اسحب المهمة">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="5" r="1"></circle>
+                            <circle cx="9" cy="12" r="1"></circle>
+                            <circle cx="9" cy="19" r="1"></circle>
+                            <circle cx="15" cy="5" r="1"></circle>
+                            <circle cx="15" cy="12" r="1"></circle>
+                            <circle cx="15" cy="19" r="1"></circle>
+                        </svg>
+                    </span>
+                `}
+            </div>
         </div>
     `;
+
+    // Click handler for View Details Eye action
+    const detailsBtn = card.querySelector(".btn-card-details");
+    if (detailsBtn) {
+        detailsBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            openTaskDetailsModal(task, card);
+        });
+    }
 
     // Drag events for card
     card.addEventListener("dragstart", (e) => {
@@ -568,10 +590,11 @@ function revertCardToPreviousStatus(cardElement, previousStatus) {
                 ? document.getElementById("cards-progress")
                 : document.getElementById("cards-completed");
 
+    const actionsGroup = cardElement.querySelector(".card-actions-group");
+
     if (previousStatus === "completed") {
         cardElement.classList.add("card-is-completed");
-        const cardBottom = cardElement.querySelector(".card-bottom");
-        const handle = cardBottom?.querySelector(".drag-handle");
+        const handle = actionsGroup?.querySelector(".drag-handle");
         if (handle) {
             handle.outerHTML = `
                 <span class="completed-check-badge" title="مكتملة">
@@ -583,8 +606,7 @@ function revertCardToPreviousStatus(cardElement, previousStatus) {
         }
     } else {
         cardElement.classList.remove("card-is-completed");
-        const cardBottom = cardElement.querySelector(".card-bottom");
-        const checkBadge = cardBottom?.querySelector(".completed-check-badge");
+        const checkBadge = actionsGroup?.querySelector(".completed-check-badge");
         if (checkBadge) {
             checkBadge.outerHTML = `
                 <span class="drag-handle" aria-label="اسحب المهمة">
@@ -732,11 +754,12 @@ function initDragAndDrop() {
             // Update card styling based on target column
             draggingCard.setAttribute("data-status", statusKey);
 
+            const actionsGroup = draggingCard.querySelector(".card-actions-group");
+
             if (statusKey === "completed") {
                 draggingCard.classList.add("card-is-completed");
                 // Update bottom action icon to completed checkmark
-                const cardBottom = draggingCard.querySelector(".card-bottom");
-                const handle = cardBottom?.querySelector(".drag-handle");
+                const handle = actionsGroup?.querySelector(".drag-handle");
                 if (handle) {
                     handle.outerHTML = `
                         <span class="completed-check-badge" title="مكتملة">
@@ -748,8 +771,7 @@ function initDragAndDrop() {
                 }
             } else {
                 draggingCard.classList.remove("card-is-completed");
-                const cardBottom = draggingCard.querySelector(".card-bottom");
-                const checkBadge = cardBottom?.querySelector(".completed-check-badge");
+                const checkBadge = actionsGroup?.querySelector(".completed-check-badge");
                 if (checkBadge) {
                     checkBadge.outerHTML = `
                         <span class="drag-handle" aria-label="اسحب المهمة">
@@ -782,9 +804,305 @@ function initDragAndDrop() {
     });
 }
 
+let currentActiveModalTask = null;
+let currentActiveModalCardElement = null;
+
+/**
+ * Opens the Task Details Modal populated with database fields.
+ */
+function openTaskDetailsModal(task, cardElement) {
+    currentActiveModalTask = task;
+    currentActiveModalCardElement = cardElement;
+
+    const overlay = document.getElementById("task-details-modal-overlay");
+    if (!overlay) return;
+
+    // 1. Populate Badges
+    const headerBadges = document.getElementById("modal-header-badges");
+    if (headerBadges) {
+        const categoryInfo = getCategoryInfo(task.category);
+        const priorityInfo = getPriorityInfo(task.priority);
+        const statusKey = normalizeStatus(task.status);
+        const statusLabel = statusKey === "completed" ? "مكتملة" : statusKey === "progress" ? "قيد التنفيذ" : "قيد الانتظار";
+        const statusDotClass = statusKey === "completed" ? "dot-completed" : statusKey === "progress" ? "dot-progress" : "dot-pending";
+
+        headerBadges.innerHTML = `
+            <span class="category-badge ${categoryInfo.className}">${escapeHtml(categoryInfo.label)}</span>
+            <span class="priority-badge ${priorityInfo.className}">
+                <span class="priority-dot" aria-hidden="true"></span>
+                <span>${escapeHtml(priorityInfo.label)}</span>
+            </span>
+            <span class="modal-status-badge">
+                <span class="column-dot ${statusDotClass}" style="width: 7px; height: 7px;" aria-hidden="true"></span>
+                <span>${escapeHtml(statusLabel)}</span>
+            </span>
+        `;
+    }
+
+    // 2. Populate Title and Description
+    const titleEl = document.getElementById("modal-task-title");
+    if (titleEl) {
+        titleEl.textContent = task.title || "مهمة بدون عنوان";
+    }
+
+    const descEl = document.getElementById("modal-task-description");
+    if (descEl) {
+        if (task.description && task.description.trim()) {
+            descEl.textContent = task.description;
+            descEl.classList.remove("is-empty");
+        } else {
+            descEl.textContent = "لا يوجد وصف إضافي لهذه المهمة.";
+            descEl.classList.add("is-empty");
+        }
+    }
+
+    // 3. Populate Grid Fields
+    const statusValEl = document.getElementById("modal-task-status");
+    if (statusValEl) {
+        const statusKey = normalizeStatus(task.status);
+        const statusLabel = statusKey === "completed" ? "مكتملة" : statusKey === "progress" ? "قيد التنفيذ" : "قيد الانتظار";
+        statusValEl.textContent = statusLabel;
+    }
+
+    const catValEl = document.getElementById("modal-task-category");
+    if (catValEl) {
+        const categoryInfo = getCategoryInfo(task.category);
+        catValEl.textContent = categoryInfo.label;
+    }
+
+    const prioValEl = document.getElementById("modal-task-priority");
+    if (prioValEl) {
+        const priorityInfo = getPriorityInfo(task.priority);
+        prioValEl.textContent = priorityInfo.label;
+    }
+
+    const durValEl = document.getElementById("modal-task-duration");
+    if (durValEl) {
+        durValEl.textContent = getDurationLabel(task.duration);
+    }
+
+    const dateValEl = document.getElementById("modal-task-date");
+    if (dateValEl) {
+        dateValEl.textContent = task.date || getTodayDateString();
+    }
+
+    const idValEl = document.getElementById("modal-task-id");
+    if (idValEl) {
+        idValEl.textContent = task.ID_task || task.id || "-";
+    }
+
+    // Reset delete button state
+    const deleteBtn = document.getElementById("modal-delete-btn");
+    if (deleteBtn) {
+        deleteBtn.classList.remove("is-confirming");
+        deleteBtn.innerHTML = `
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+            <span>حذف المهمة</span>
+        `;
+    }
+
+    // Show modal overlay
+    overlay.classList.add("is-active");
+    overlay.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+}
+
+/**
+ * Closes the Task Details Modal.
+ */
+function closeTaskDetailsModal() {
+    const overlay = document.getElementById("task-details-modal-overlay");
+    if (!overlay) return;
+
+    overlay.classList.remove("is-active");
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    currentActiveModalTask = null;
+    currentActiveModalCardElement = null;
+}
+
+/**
+ * Sends a POST request to delete the task from the database and updates the UI.
+ * Follows the project's canonical Axios promise pattern (.then, .catch, .finally).
+ */
+function deleteTaskFromModal() {
+    if (!currentActiveModalTask) return;
+
+    const deleteBtn = document.getElementById("modal-delete-btn");
+    if (!deleteBtn) return;
+
+    // First click: prompt for confirmation
+    if (!deleteBtn.classList.contains("is-confirming")) {
+        deleteBtn.classList.add("is-confirming");
+        deleteBtn.innerHTML = `
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            <span>تأكيد الحذف؟</span>
+        `;
+        return;
+    }
+
+    const taskToDelete = currentActiveModalTask;
+    const cardElToDelete = currentActiveModalCardElement;
+    const taskId = taskToDelete.id;
+    const taskTitle = taskToDelete.title || "المهمة";
+
+    // Set loading state on button
+    deleteBtn.disabled = true;
+    deleteBtn.innerHTML = `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-spinner" style="display:inline-block; animation: buttonSpin 0.7s linear infinite;">
+            <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+            <path d="M12 2a10 10 0 0 1 10 10"></path>
+        </svg>
+        <span>جاري الحذف...</span>
+    `;
+
+    const userStr = localStorage.getItem("auth_user");
+    const currentUser = userStr ? JSON.parse(userStr) : {};
+    const authenticatedUserId = currentUser.userId || currentUser.id || "";
+    const userEmail = currentUser.email || "";
+
+    axios
+        .post(UrlPost, {
+            POST: "Delete a task",
+            action: "delete",
+            taskId: taskId,
+            id: taskId,
+            ID_task: taskToDelete.ID_task || taskId,
+            title: taskToDelete.title || "",
+            description: taskToDelete.description || "",
+            status: taskToDelete.status || "",
+            category: taskToDelete.category || "",
+            priority: taskToDelete.priority || "",
+            duration: taskToDelete.duration || "",
+            date: taskToDelete.date || "",
+            userId: authenticatedUserId,
+            "user ID": authenticatedUserId,
+            userEmail: userEmail,
+            data: {
+                taskId: taskId,
+                id: taskId,
+                ID_task: taskToDelete.ID_task || taskId,
+                title: taskToDelete.title || "",
+                description: taskToDelete.description || "",
+                status: taskToDelete.status || "",
+                category: taskToDelete.category || "",
+                priority: taskToDelete.priority || "",
+                duration: taskToDelete.duration || "",
+                date: taskToDelete.date || "",
+                userId: authenticatedUserId,
+                "user ID": authenticatedUserId,
+                userEmail: userEmail,
+            },
+        })
+        .then(function (response) {
+            const data = response.data;
+            const isSuccess = data && (data.success === true || data.process === "done" || data.status === "success");
+
+            if (isSuccess || !data || data.process !== "error") {
+                // Immediately remove card from UI with smooth transition
+                if (cardElToDelete && cardElToDelete.parentNode) {
+                    cardElToDelete.style.transition = "opacity 0.2s ease, transform 0.2s ease";
+                    cardElToDelete.style.opacity = "0";
+                    cardElToDelete.style.transform = "scale(0.9)";
+                    setTimeout(() => {
+                        if (cardElToDelete.parentNode) {
+                            cardElToDelete.parentNode.removeChild(cardElToDelete);
+                        }
+                        updateBoardStats();
+                    }, 200);
+                } else {
+                    updateBoardStats();
+                }
+
+                closeTaskDetailsModal();
+                showToast("تم الحذف بنجاح", `تم حذف المهمة "${taskTitle}" بنجاح.`, "success", 2500);
+            } else {
+                const errorMsg = data?.message || data?.error?.message || "فشلت عملية حذف المهمة في السيرفر.";
+                showToast("فشل الحذف", errorMsg, "error", 4000);
+                deleteBtn.disabled = false;
+                deleteBtn.classList.remove("is-confirming");
+                deleteBtn.innerHTML = `
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                    <span>حذف المهمة</span>
+                `;
+            }
+        })
+        .catch(function (error) {
+            console.error("Error deleting task:", error);
+            const serverMsg = error.response?.data?.message || error.response?.data?.error?.message || "تعذر إتمام طلب الحذف، يرجى التحقق من اتصال السيرفر.";
+            showToast("خطأ في الحذف", serverMsg, "error");
+            deleteBtn.disabled = false;
+            deleteBtn.classList.remove("is-confirming");
+            deleteBtn.innerHTML = `
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+                <span>حذف المهمة</span>
+            `;
+        })
+        .finally(function () {
+            // Completion callback
+        });
+}
+
+/**
+ * Initializes modal event listeners once on DOM ready.
+ */
+function initTaskDetailsModalListeners() {
+    const overlay = document.getElementById("task-details-modal-overlay");
+    const closeBtn = document.getElementById("modal-close-btn");
+    const dismissBtn = document.getElementById("modal-dismiss-btn");
+    const deleteBtn = document.getElementById("modal-delete-btn");
+
+    if (closeBtn) {
+        closeBtn.addEventListener("click", closeTaskDetailsModal);
+    }
+
+    if (dismissBtn) {
+        dismissBtn.addEventListener("click", closeTaskDetailsModal);
+    }
+
+    if (deleteBtn) {
+        deleteBtn.addEventListener("click", deleteTaskFromModal);
+    }
+
+    if (overlay) {
+        overlay.addEventListener("click", (e) => {
+            if (e.target === overlay) {
+                closeTaskDetailsModal();
+            }
+        });
+    }
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            const activeOverlay = document.getElementById("task-details-modal-overlay");
+            if (activeOverlay && activeOverlay.classList.contains("is-active")) {
+                closeTaskDetailsModal();
+            }
+        }
+    });
+}
+
 /**
  * Main function to fetch tasks from webhook/Notion and populate only today's tasks in sections.
- */
+  **/
+
 function GetTasks() {
     const btn = document.querySelector(".btn-new-task");
     const originalContent = btn ? btn.innerHTML : "";
@@ -882,7 +1200,7 @@ function GetTasks() {
                 btn.disabled = false;
                 btn.innerHTML = originalContent;
             }
-        });
+          });
 }
 
 // Automatically check authentication, update today badge, initialize drag-and-drop, and fetch tasks on page load/refresh
@@ -902,5 +1220,6 @@ document.addEventListener("DOMContentLoaded", () => {
         dateBadge.textContent = `مهام اليوم: ${getTodayArabicString()}`;
     }
     initDragAndDrop();
+    initTaskDetailsModalListeners();
     GetTasks();
 });
